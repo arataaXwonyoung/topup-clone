@@ -84,7 +84,7 @@
                 <div class="flex items-center">
                     <!-- Logo -->
                     <a href="{{ route('home') }}" class="flex items-center">
-                        <span class="text-2xl font-bold text-yellow-400 neon-text">⚡ Takapedia</span>
+                        <span class="text-2xl font-bold text-yellow-400 neon-text">⚡ Aratopup</span>
                     </a>
 
                     <!-- Search Bar -->

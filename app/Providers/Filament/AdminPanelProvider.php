@@ -10,7 +10,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
-use Filament\Navigation\NavigationGroup;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -18,6 +17,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Navigation\MenuItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,17 +28,21 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('Takapedia Admin')
             ->colors([
-                'danger' => Color::Red,
-                'gray' => Color::Zinc,
+                'primary' => Color::Amber,
+                'gray' => Color::Slate,
                 'info' => Color::Blue,
-                'primary' => Color::Yellow,
-                'success' => Color::Green,
+                'success' => Color::Emerald,
                 'warning' => Color::Orange,
+                'danger' => Color::Red,
             ])
-            ->darkMode(true)
             ->font('Inter')
+            ->darkMode(true) // Enable dark mode
+            ->sidebarCollapsibleOnDesktop()
+            ->brandName('Takapedia Admin')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('favicon.ico'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -46,7 +50,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                // Custom widgets akan di-load otomatis
+                Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -62,33 +67,26 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->navigationGroups([
-                NavigationGroup::make('Transactions')
-                    ->icon('heroicon-o-shopping-cart')
-                    ->collapsed(false),
-                NavigationGroup::make('Products & Games')
-                    ->icon('heroicon-o-cube')
-                    ->collapsed(false),
-                NavigationGroup::make('Marketing')
-                    ->icon('heroicon-o-megaphone')
-                    ->collapsed(false),
-                NavigationGroup::make('Users & Reviews')
-                    ->icon('heroicon-o-users')
-                    ->collapsed(false),
-                NavigationGroup::make('Content')
-                    ->icon('heroicon-o-document-text')
-                    ->collapsed(false),
-                NavigationGroup::make('Reports & Analytics')
-                    ->icon('heroicon-o-chart-bar')
-                    ->collapsed(false),
-                NavigationGroup::make('System')
-                    ->icon('heroicon-o-cog')
-                    ->collapsed(true),
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Profile')
+                    ->url('/admin/profile')
+                    ->icon('heroicon-o-user-circle'),
+                'logout' => MenuItem::make()->label('Log Out'),
             ])
-            ->sidebarCollapsibleOnDesktop()
+            ->navigationGroups([
+                'Shop Management',
+                'User Management', 
+                'Payment & Orders',
+                'Content',
+                'Reports & Analytics',
+                'System',
+            ])
+            ->collapsibleNavigationGroups(true)
+            ->topNavigation(false)
             ->breadcrumbs(true)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->databaseNotifications()
-            ->spa();
+            ->databaseNotificationsPolling('30s');
     }
 }

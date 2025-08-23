@@ -8,7 +8,7 @@
         <div class="glass rounded-xl p-8">
             <!-- Logo & Title -->
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-yellow-400 neon-text mb-2">⚡ Takapedia</h1>
+                <h1 class="text-3xl font-bold text-yellow-400 neon-text mb-2">⚡ ARATOPUP   </h1>
                 <h2 class="text-xl font-semibold text-gray-100">Konfirmasi Password</h2>
                 <p class="mt-2 text-sm text-gray-400">
                     Ini adalah area aman aplikasi. Harap konfirmasi password Anda sebelum melanjutkan.

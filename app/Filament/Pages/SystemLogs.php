@@ -7,11 +7,14 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Models\WebhookLog;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 
-class SystemLogs extends Page implements HasTable
+class SystemLogs extends Page implements HasForms, HasTable
 {
+    use InteractsWithForms;
     use InteractsWithTable;
     
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

@@ -17,6 +17,19 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Di bagian atas setelah use statements
+Route::get('/', function () {
+    if (auth()->check()) {
+        if (auth()->user()->is_admin) {
+            return redirect('/admin');
+        }
+        return redirect()->route('user.dashboard');
+    }
+    return view('home');
+})->name('home');
+
+
+
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/topup', [HomeController::class, 'index'])->name('topup');

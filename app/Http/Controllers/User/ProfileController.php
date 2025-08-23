@@ -52,20 +52,4 @@ class ProfileController extends Controller
         
         return back()->with('success', 'Password updated successfully!');
     }
-    
-    public function updateNotifications(Request $request)
-    {
-        $user = auth()->user();
-        
-        $preferences = $user->preferences ?? [];
-        $preferences['notifications'] = [
-            'email' => $request->boolean('email_notifications'),
-            'whatsapp' => $request->boolean('whatsapp_notifications'),
-            'promo' => $request->boolean('promo_notifications'),
-        ];
-        
-        $user->update(['preferences' => $preferences]);
-        
-        return back()->with('success', 'Notification preferences updated!');
-    }
 }

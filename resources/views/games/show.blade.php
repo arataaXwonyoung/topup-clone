@@ -66,7 +66,7 @@
                 </div>
                 
                 <!-- Step 2: Select Denomination -->
-                <div class="glass rounded-xl p-6 mb-6">
+<div class="glass rounded-xl p-6 mb-6">
     <div class="flex items-center mb-4">
         <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">2</span>
         <h2 class="text-lg font-semibold">Pilih Nominal</h2>
@@ -74,7 +74,7 @@
     
     @if($game->denominations && $game->denominations->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            @foreach($game->denominations as $denom)
+            @foreach($game->denominations->where('is_active', true) as $denom)
             <label class="relative cursor-pointer">
                 <input type="radio" 
                        name="denomination_id" 
@@ -97,11 +97,7 @@
         </div>
     @else
         <div class="text-center py-8">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-200">Tidak ada nominal tersedia</h3>
-            <p class="mt-1 text-sm text-gray-400">Nominal untuk game ini sedang tidak tersedia.</p>
+            <p class="text-gray-400">Tidak ada nominal tersedia untuk game ini.</p>
         </div>
     @endif
 </div>
