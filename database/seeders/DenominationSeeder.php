@@ -2,245 +2,105 @@
 
 namespace Database\Seeders;
 
-use App\Models\Game;
 use App\Models\Denomination;
+use App\Models\Game;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DenominationSeeder extends Seeder
 {
     public function run(): void
     {
-        // Clear existing denominations
-        DB::table('denominations')->truncate();
-        
-        // Mobile Legends
-        $mlbb = Game::where('slug', 'mobile-legends')->first();
-        if ($mlbb) {
-            $this->createMLBBDenominations($mlbb->id);
-            echo "Created denominations for Mobile Legends\n";
-        }
-
-        // Free Fire
-        $ff = Game::where('slug', 'free-fire')->first();
-        if ($ff) {
-            $this->createFFDenominations($ff->id);
-            echo "Created denominations for Free Fire\n";
-        }
-
-        // PUBG Mobile
-        $pubg = Game::where('slug', 'pubg-mobile')->first();
-        if ($pubg) {
-            $this->createPUBGDenominations($pubg->id);
-            echo "Created denominations for PUBG Mobile\n";
-        }
-
-        // Genshin Impact
-        $genshin = Game::where('slug', 'genshin-impact')->first();
-        if ($genshin) {
-            $this->createGenshinDenominations($genshin->id);
-            echo "Created denominations for Genshin Impact\n";
-        }
-        
-        // Valorant
-        $valorant = Game::where('slug', 'valorant')->first();
-        if ($valorant) {
-            $this->createValorantDenominations($valorant->id);
-            echo "Created denominations for Valorant\n";
-        }
-        
-        // Call of Duty Mobile
-        $cod = Game::where('slug', 'cod-mobile')->first();
-        if ($cod) {
-            $this->createCODDenominations($cod->id);
-            echo "Created denominations for Call of Duty Mobile\n";
-        }
-        
-        // Add more games...
-        echo "All denominations seeded successfully!\n";
-    }
-
-    protected function createMLBBDenominations($gameId): void
-    {
         $denominations = [
-            // Special Passes
-            ['name' => 'Weekly Diamond Pass', 'amount' => 0, 'bonus' => 0, 'price' => 26777, 'is_hot' => true, 'sort_order' => 1],
-            ['name' => '2x Weekly Diamond Pass', 'amount' => 0, 'bonus' => 0, 'price' => 53554, 'sort_order' => 2],
-            ['name' => '3x Weekly Diamond Pass', 'amount' => 0, 'bonus' => 0, 'price' => 80331, 'sort_order' => 3],
-            ['name' => 'Twilight Pass', 'amount' => 0, 'bonus' => 0, 'price' => 147777, 'is_hot' => true, 'sort_order' => 4],
+            'Mobile Legends' => [
+                ['name' => '86 Diamonds', 'amount' => 86, 'bonus' => 0, 'price' => 20000, 'original_price' => 22000, 'is_hot' => true],
+                ['name' => '172 Diamonds', 'amount' => 172, 'bonus' => 0, 'price' => 39000, 'original_price' => 42000],
+                ['name' => '257 Diamonds', 'amount' => 257, 'bonus' => 0, 'price' => 58000, 'original_price' => 62000],
+                ['name' => '344 Diamonds', 'amount' => 344, 'bonus' => 0, 'price' => 77000, 'original_price' => 82000],
+                ['name' => '514 Diamonds', 'amount' => 514, 'bonus' => 0, 'price' => 115000, 'original_price' => 122000],
+                ['name' => '706 Diamonds', 'amount' => 706, 'bonus' => 0, 'price' => 154000, 'original_price' => 162000],
+                ['name' => '878 Diamonds', 'amount' => 878, 'bonus' => 0, 'price' => 192000, 'original_price' => 202000],
+                ['name' => '2195 Diamonds', 'amount' => 2195, 'bonus' => 0, 'price' => 462000, 'original_price' => 482000],
+                ['name' => 'Weekly Diamond Pass', 'amount' => 1, 'bonus' => 0, 'price' => 28000, 'original_price' => 30000, 'is_promo' => true],
+                ['name' => 'Twilight Pass', 'amount' => 1, 'bonus' => 0, 'price' => 145000, 'original_price' => 150000],
+            ],
+            'Free Fire' => [
+                ['name' => '50 Diamonds', 'amount' => 50, 'bonus' => 0, 'price' => 7500, 'original_price' => 8000, 'is_hot' => true],
+                ['name' => '70 Diamonds', 'amount' => 70, 'bonus' => 0, 'price' => 10000, 'original_price' => 11000],
+                ['name' => '140 Diamonds', 'amount' => 140, 'bonus' => 0, 'price' => 19500, 'original_price' => 21000],
+                ['name' => '210 Diamonds', 'amount' => 210, 'bonus' => 0, 'price' => 29000, 'original_price' => 31000],
+                ['name' => '355 Diamonds', 'amount' => 355, 'bonus' => 0, 'price' => 48000, 'original_price' => 51000],
+                ['name' => '720 Diamonds', 'amount' => 720, 'bonus' => 0, 'price' => 95000, 'original_price' => 100000],
+                ['name' => '1450 Diamonds', 'amount' => 1450, 'bonus' => 0, 'price' => 190000, 'original_price' => 200000],
+                ['name' => 'Member Mingguan', 'amount' => 1, 'bonus' => 0, 'price' => 29000, 'original_price' => 31000, 'is_promo' => true],
+                ['name' => 'Member Bulanan', 'amount' => 1, 'bonus' => 0, 'price' => 85000, 'original_price' => 90000],
+            ],
+            'PUBG Mobile' => [
+                ['name' => '60 UC', 'amount' => 60, 'bonus' => 0, 'price' => 15000, 'original_price' => 16000, 'is_hot' => true],
+                ['name' => '325 UC', 'amount' => 325, 'bonus' => 0, 'price' => 75000, 'original_price' => 79000],
+                ['name' => '660 UC', 'amount' => 660, 'bonus' => 0, 'price' => 150000, 'original_price' => 156000],
+                ['name' => '1800 UC', 'amount' => 1800, 'bonus' => 0, 'price' => 375000, 'original_price' => 390000],
+                ['name' => '3850 UC', 'amount' => 3850, 'bonus' => 0, 'price' => 750000, 'original_price' => 780000],
+                ['name' => '8100 UC', 'amount' => 8100, 'bonus' => 0, 'price' => 1500000, 'original_price' => 1560000],
+                ['name' => 'Royale Pass', 'amount' => 1, 'bonus' => 0, 'price' => 135000, 'original_price' => 140000, 'is_promo' => true],
+            ],
+            'Genshin Impact' => [
+                ['name' => '60 Genesis Crystals', 'amount' => 60, 'bonus' => 0, 'price' => 16000, 'original_price' => 17000],
+                ['name' => '300+30 Genesis Crystals', 'amount' => 300, 'bonus' => 30, 'price' => 79000, 'original_price' => 85000, 'is_hot' => true],
+                ['name' => '980+110 Genesis Crystals', 'amount' => 980, 'bonus' => 110, 'price' => 249000, 'original_price' => 260000],
+                ['name' => '1980+260 Genesis Crystals', 'amount' => 1980, 'bonus' => 260, 'price' => 479000, 'original_price' => 500000],
+                ['name' => '3280+600 Genesis Crystals', 'amount' => 3280, 'bonus' => 600, 'price' => 799000, 'original_price' => 830000],
+                ['name' => '6480+1600 Genesis Crystals', 'amount' => 6480, 'bonus' => 1600, 'price' => 1599000, 'original_price' => 1650000],
+                ['name' => 'Blessing of the Welkin Moon', 'amount' => 1, 'bonus' => 0, 'price' => 79000, 'original_price' => 85000, 'is_promo' => true],
+            ],
+            'Valorant' => [
+                ['name' => '125 Points', 'amount' => 125, 'bonus' => 0, 'price' => 15000, 'original_price' => 16000],
+                ['name' => '420 Points', 'amount' => 420, 'bonus' => 0, 'price' => 49000, 'original_price' => 52000, 'is_hot' => true],
+                ['name' => '700 Points', 'amount' => 700, 'bonus' => 0, 'price' => 80000, 'original_price' => 85000],
+                ['name' => '1375 Points', 'amount' => 1375, 'bonus' => 0, 'price' => 150000, 'original_price' => 160000],
+                ['name' => '2400 Points', 'amount' => 2400, 'bonus' => 0, 'price' => 250000, 'original_price' => 265000],
+                ['name' => '4000 Points', 'amount' => 4000, 'bonus' => 0, 'price' => 400000, 'original_price' => 420000],
+                ['name' => '8150 Points', 'amount' => 8150, 'bonus' => 0, 'price' => 800000, 'original_price' => 835000],
+            ],
+            'Call of Duty Mobile' => [
+                ['name' => '53 CP', 'amount' => 53, 'bonus' => 0, 'price' => 10000, 'original_price' => 11000],
+                ['name' => '106 CP', 'amount' => 106, 'bonus' => 0, 'price' => 20000, 'original_price' => 21000, 'is_hot' => true],
+                ['name' => '264 CP', 'amount' => 264, 'bonus' => 0, 'price' => 49000, 'original_price' => 52000],
+                ['name' => '528 CP', 'amount' => 528, 'bonus' => 0, 'price' => 95000, 'original_price' => 100000],
+                ['name' => '1056 CP', 'amount' => 1056, 'bonus' => 0, 'price' => 189000, 'original_price' => 200000],
+                ['name' => '2118 CP', 'amount' => 2118, 'bonus' => 0, 'price' => 379000, 'original_price' => 400000],
+                ['name' => '5430 CP', 'amount' => 5430, 'bonus' => 0, 'price' => 949000, 'original_price' => 1000000],
+            ],
+            'Roblox' => [
+                ['name' => '200 Robux', 'amount' => 200, 'bonus' => 0, 'price' => 39000, 'original_price' => 42000],
+                ['name' => '400 Robux', 'amount' => 400, 'bonus' => 0, 'price' => 75000, 'original_price' => 80000, 'is_hot' => true],
+                ['name' => '800 Robux', 'amount' => 800, 'bonus' => 0, 'price' => 150000, 'original_price' => 160000],
+                ['name' => '1700 Robux', 'amount' => 1700, 'bonus' => 0, 'price' => 299000, 'original_price' => 320000],
+                ['name' => '2200 Robux', 'amount' => 2200, 'bonus' => 0, 'price' => 389000, 'original_price' => 410000],
+                ['name' => '4500 Robux', 'amount' => 4500, 'bonus' => 0, 'price' => 779000, 'original_price' => 820000],
+                ['name' => '10000 Robux', 'amount' => 10000, 'bonus' => 0, 'price' => 1699000, 'original_price' => 1800000],
+            ],
+        ];
+
+        foreach ($denominations as $gameName => $items) {
+            $game = Game::where('name', $gameName)->first();
             
-            // Regular Diamonds
-            ['name' => '86 Diamonds', 'amount' => 78, 'bonus' => 8, 'price' => 19900, 'sort_order' => 5],
-            ['name' => '172 Diamonds', 'amount' => 156, 'bonus' => 16, 'price' => 39500, 'sort_order' => 6],
-            ['name' => '257 Diamonds', 'amount' => 234, 'bonus' => 23, 'price' => 59200, 'sort_order' => 7],
-            ['name' => '344 Diamonds', 'amount' => 312, 'bonus' => 32, 'price' => 78900, 'sort_order' => 8],
-            ['name' => '429 Diamonds', 'amount' => 390, 'bonus' => 39, 'price' => 98600, 'sort_order' => 9],
-            ['name' => '514 Diamonds', 'amount' => 468, 'bonus' => 46, 'price' => 118300, 'sort_order' => 10],
-            ['name' => '706 Diamonds', 'amount' => 625, 'bonus' => 81, 'price' => 157700, 'is_hot' => true, 'sort_order' => 11],
-            ['name' => '878 Diamonds', 'amount' => 781, 'bonus' => 97, 'price' => 197100, 'sort_order' => 12],
-            ['name' => '1412 Diamonds', 'amount' => 1250, 'bonus' => 162, 'price' => 315500, 'sort_order' => 13],
-            ['name' => '2195 Diamonds', 'amount' => 1860, 'bonus' => 335, 'price' => 472900, 'sort_order' => 14],
-            ['name' => '3688 Diamonds', 'amount' => 3099, 'bonus' => 589, 'price' => 788500, 'sort_order' => 15],
-            ['name' => '5532 Diamonds', 'amount' => 4649, 'bonus' => 883, 'price' => 1182700, 'sort_order' => 16],
-        ];
-
-        foreach ($denominations as $denom) {
-            Denomination::create([
-                'game_id' => $gameId,
-                'name' => $denom['name'],
-                'amount' => $denom['amount'],
-                'bonus' => $denom['bonus'],
-                'price' => $denom['price'],
-                'is_hot' => $denom['is_hot'] ?? false,
-                'is_promo' => false,
-                'is_active' => true,
-                'sort_order' => $denom['sort_order'],
-                'sku' => 'MLBB-' . str_replace(' ', '-', $denom['name']),
-            ]);
-        }
-    }
-
-    protected function createFFDenominations($gameId): void
-    {
-        $denominations = [
-            ['name' => '50 Diamonds', 'amount' => 50, 'price' => 7200, 'sort_order' => 1],
-            ['name' => '70 Diamonds', 'amount' => 70, 'price' => 9900, 'sort_order' => 2],
-            ['name' => '100 Diamonds', 'amount' => 100, 'price' => 14000, 'is_hot' => true, 'sort_order' => 3],
-            ['name' => '140 Diamonds', 'amount' => 140, 'price' => 19800, 'sort_order' => 4],
-            ['name' => '210 Diamonds', 'amount' => 210, 'price' => 29700, 'sort_order' => 5],
-            ['name' => '280 Diamonds', 'amount' => 280, 'price' => 39600, 'sort_order' => 6],
-            ['name' => '355 Diamonds', 'amount' => 355, 'price' => 49500, 'sort_order' => 7],
-            ['name' => '500 Diamonds', 'amount' => 500, 'price' => 69300, 'is_hot' => true, 'sort_order' => 8],
-            ['name' => '720 Diamonds', 'amount' => 720, 'price' => 99000, 'sort_order' => 9],
-            ['name' => '1000 Diamonds', 'amount' => 1000, 'price' => 138600, 'sort_order' => 10],
-            ['name' => '1450 Diamonds', 'amount' => 1450, 'price' => 198000, 'sort_order' => 11],
-            ['name' => '2180 Diamonds', 'amount' => 2180, 'price' => 297000, 'sort_order' => 12],
-            ['name' => 'Member Mingguan', 'amount' => 0, 'price' => 29700, 'sort_order' => 13],
-            ['name' => 'Member Bulanan', 'amount' => 0, 'price' => 89100, 'is_hot' => true, 'sort_order' => 14],
-        ];
-
-        foreach ($denominations as $denom) {
-            Denomination::create([
-                'game_id' => $gameId,
-                'name' => $denom['name'],
-                'amount' => $denom['amount'],
-                'bonus' => 0,
-                'price' => $denom['price'],
-                'is_hot' => $denom['is_hot'] ?? false,
-                'is_promo' => false,
-                'is_active' => true,
-                'sort_order' => $denom['sort_order'],
-                'sku' => 'FF-' . str_replace(' ', '-', $denom['name']),
-            ]);
-        }
-    }
-
-    protected function createPUBGDenominations($gameId): void
-    {
-        $denominations = [
-            ['name' => '60 UC', 'amount' => 60, 'price' => 14500, 'sort_order' => 1],
-            ['name' => '325 UC', 'amount' => 325, 'price' => 72500, 'is_hot' => true, 'sort_order' => 2],
-            ['name' => '660 UC', 'amount' => 660, 'price' => 145000, 'sort_order' => 3],
-            ['name' => '1800 UC', 'amount' => 1800, 'price' => 362500, 'sort_order' => 4],
-            ['name' => '3850 UC', 'amount' => 3850, 'price' => 725000, 'sort_order' => 5],
-            ['name' => '8100 UC', 'amount' => 8100, 'price' => 1450000, 'sort_order' => 6],
-        ];
-
-        foreach ($denominations as $denom) {
-            Denomination::create([
-                'game_id' => $gameId,
-                'name' => $denom['name'],
-                'amount' => $denom['amount'],
-                'bonus' => 0,
-                'price' => $denom['price'],
-                'is_hot' => $denom['is_hot'] ?? false,
-                'is_promo' => false,
-                'is_active' => true,
-                'sort_order' => $denom['sort_order'],
-                'sku' => 'PUBG-' . $denom['amount'],
-            ]);
-        }
-    }
-
-    protected function createGenshinDenominations($gameId): void
-    {
-        $denominations = [
-            ['name' => 'Blessing of the Welkin Moon', 'amount' => 0, 'price' => 65000, 'is_hot' => true, 'sort_order' => 1],
-            ['name' => '60 Genesis Crystals', 'amount' => 60, 'price' => 15000, 'sort_order' => 2],
-            ['name' => '330 Genesis Crystals', 'amount' => 330, 'price' => 75000, 'sort_order' => 3],
-            ['name' => '1090 Genesis Crystals', 'amount' => 1090, 'price' => 225000, 'is_hot' => true, 'sort_order' => 4],
-            ['name' => '2240 Genesis Crystals', 'amount' => 2240, 'price' => 450000, 'sort_order' => 5],
-            ['name' => '3880 Genesis Crystals', 'amount' => 3880, 'price' => 750000, 'sort_order' => 6],
-            ['name' => '8080 Genesis Crystals', 'amount' => 8080, 'price' => 1500000, 'sort_order' => 7],
-        ];
-
-        foreach ($denominations as $denom) {
-            Denomination::create([
-                'game_id' => $gameId,
-                'name' => $denom['name'],
-                'amount' => $denom['amount'],
-                'bonus' => 0,
-                'price' => $denom['price'],
-                'is_hot' => $denom['is_hot'] ?? false,
-                'is_promo' => false,
-                'is_active' => true,
-                'sort_order' => $denom['sort_order'],
-                'sku' => 'GI-' . ($denom['amount'] ?: 'WELKIN'),
-            ]);
-        }
-    }
-    
-    protected function createValorantDenominations($gameId): void
-    {
-        $denominations = [
-            ['name' => '420 VP', 'amount' => 420, 'price' => 45000, 'sort_order' => 1],
-            ['name' => '700 VP', 'amount' => 700, 'price' => 75000, 'sort_order' => 2],
-            ['name' => '1375 VP', 'amount' => 1375, 'price' => 145000, 'is_hot' => true, 'sort_order' => 3],
-            ['name' => '2400 VP', 'amount' => 2400, 'price' => 250000, 'sort_order' => 4],
-            ['name' => '4000 VP', 'amount' => 4000, 'price' => 415000, 'sort_order' => 5],
-            ['name' => '8150 VP', 'amount' => 8150, 'price' => 835000, 'sort_order' => 6],
-        ];
-
-        foreach ($denominations as $denom) {
-            Denomination::create([
-                'game_id' => $gameId,
-                'name' => $denom['name'],
-                'amount' => $denom['amount'],
-                'bonus' => 0,
-                'price' => $denom['price'],
-                'is_hot' => $denom['is_hot'] ?? false,
-                'is_promo' => false,
-                'is_active' => true,
-                'sort_order' => $denom['sort_order'],
-                'sku' => 'VAL-' . $denom['amount'],
-            ]);
-        }
-    }
-    
-    protected function createCODDenominations($gameId): void
-    {
-        $denominations = [
-            ['name' => '53 CP', 'amount' => 53, 'price' => 9900, 'sort_order' => 1],
-            ['name' => '112 CP', 'amount' => 112, 'price' => 19900, 'sort_order' => 2],
-            ['name' => '278 CP', 'amount' => 278, 'price' => 49500, 'is_hot' => true, 'sort_order' => 3],
-            ['name' => '581 CP', 'amount' => 581, 'price' => 99000, 'sort_order' => 4],
-            ['name' => '1373 CP', 'amount' => 1373, 'price' => 198000, 'sort_order' => 5],
-            ['name' => '2395 CP', 'amount' => 2395, 'price' => 396000, 'sort_order' => 6],
-        ];
-
-        foreach ($denominations as $denom) {
-            Denomination::create([
-                'game_id' => $gameId,
-                'name' => $denom['name'],
-                'amount' => $denom['amount'],
-                'bonus' => 0,
-                'price' => $denom['price'],
-                'is_hot' => $denom['is_hot'] ?? false,
-                'is_promo' => false,
-                'is_active' => true,
-                'sort_order' => $denom['sort_order'],
-                'sku' => 'COD-' . $denom['amount'],
-            ]);
+            if ($game) {
+                foreach ($items as $index => $item) {
+                    Denomination::create([
+                        'game_id' => $game->id,
+                        'name' => $item['name'],
+                        'amount' => $item['amount'],
+                        'bonus' => $item['bonus'],
+                        'price' => $item['price'],
+                        'original_price' => $item['original_price'] ?? $item['price'],
+                        'is_hot' => $item['is_hot'] ?? false,
+                        'is_promo' => $item['is_promo'] ?? false,
+                        'is_active' => true,
+                        'sort_order' => $index,
+                        'sku' => strtoupper(str_replace(' ', '_', $gameName)) . '_' . ($index + 1),
+                    ]);
+                }
+            }
         }
     }
 }

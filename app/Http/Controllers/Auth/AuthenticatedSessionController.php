@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/Auth/AuthenticatedSessionController.php
 
 namespace App\Http\Controllers\Auth;
 
@@ -36,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // For regular users
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('user.dashboard'));
     }
 
     /**
@@ -50,6 +49,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
+        // Always redirect to home page after logout
         return redirect('/');
     }
 }

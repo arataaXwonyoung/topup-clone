@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Game;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class GameSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class GameSeeder extends Seeder
                 'requires_server' => true,
                 'id_label' => 'User ID',
                 'server_label' => 'Server ID',
-                'description' => 'Top up Mobile Legends: Bang Bang diamonds untuk unlock hero dan skin favoritmu!',
+                'description' => 'Top up Mobile Legends: Bang Bang diamonds untuk unlock hero dan skin favoritmu!'
             ],
             [
                 'name' => 'Free Fire',
@@ -29,7 +30,7 @@ class GameSeeder extends Seeder
                 'is_hot' => true,
                 'requires_server' => false,
                 'id_label' => 'Player ID',
-                'description' => 'Top up Free Fire diamonds instant dan murah!',
+                'description' => 'Top up Free Fire diamonds instant dan murah!'
             ],
             [
                 'name' => 'PUBG Mobile',
@@ -39,7 +40,7 @@ class GameSeeder extends Seeder
                 'is_hot' => true,
                 'requires_server' => false,
                 'id_label' => 'User ID',
-                'description' => 'Beli UC PUBG Mobile untuk upgrade senjata dan skin.',
+                'description' => 'Beli UC PUBG Mobile untuk upgrade senjata dan skin.'
             ],
             [
                 'name' => 'Genshin Impact',
@@ -50,7 +51,7 @@ class GameSeeder extends Seeder
                 'requires_server' => true,
                 'id_label' => 'UID',
                 'server_label' => 'Server',
-                'description' => 'Top up Genesis Crystal dan Primogem Genshin Impact.',
+                'description' => 'Top up Genesis Crystal dan Primogem Genshin Impact.'
             ],
             [
                 'name' => 'Valorant',
@@ -59,7 +60,7 @@ class GameSeeder extends Seeder
                 'category' => 'games',
                 'requires_server' => false,
                 'id_label' => 'Riot ID',
-                'description' => 'Beli Valorant Points untuk unlock agent dan skin senjata.',
+                'description' => 'Beli Valorant Points untuk unlock agent dan skin senjata.'
             ],
             [
                 'name' => 'Call of Duty Mobile',
@@ -68,7 +69,7 @@ class GameSeeder extends Seeder
                 'category' => 'games',
                 'requires_server' => false,
                 'id_label' => 'Player ID',
-                'description' => 'Top up CP Call of Duty Mobile dengan harga termurah.',
+                'description' => 'Top up CP Call of Duty Mobile dengan harga termurah.'
             ],
             [
                 'name' => 'Honor of Kings',
@@ -77,7 +78,7 @@ class GameSeeder extends Seeder
                 'category' => 'games',
                 'requires_server' => false,
                 'id_label' => 'User ID',
-                'description' => 'Top up Token Honor of Kings instant 24 jam.',
+                'description' => 'Top up Token Honor of Kings instant 24 jam.'
             ],
             [
                 'name' => 'Honkai Star Rail',
@@ -87,7 +88,7 @@ class GameSeeder extends Seeder
                 'requires_server' => true,
                 'id_label' => 'UID',
                 'server_label' => 'Server',
-                'description' => 'Top up Oneiric Shard dan Stellar Jade HSR.',
+                'description' => 'Top up Oneiric Shard dan Stellar Jade HSR.'
             ],
             [
                 'name' => 'Roblox',
@@ -97,7 +98,7 @@ class GameSeeder extends Seeder
                 'is_hot' => true,
                 'requires_server' => false,
                 'id_label' => 'Username',
-                'description' => 'Beli Robux untuk Roblox dengan berbagai nominal.',
+                'description' => 'Beli Robux untuk Roblox dengan berbagai nominal.'
             ],
             [
                 'name' => 'Arena Breakout',
@@ -106,7 +107,7 @@ class GameSeeder extends Seeder
                 'category' => 'games',
                 'requires_server' => false,
                 'id_label' => 'User ID',
-                'description' => 'Top up Bonds Arena Breakout Infinite.',
+                'description' => 'Top up Bonds Arena Breakout Infinite.'
             ],
             [
                 'name' => 'Netflix',
@@ -115,7 +116,7 @@ class GameSeeder extends Seeder
                 'category' => 'entertainment',
                 'requires_server' => false,
                 'id_label' => 'Email',
-                'description' => 'Langganan Netflix Premium dengan harga terjangkau.',
+                'description' => 'Langganan Netflix Premium dengan harga terjangkau.'
             ],
             [
                 'name' => 'Spotify Premium',
@@ -124,14 +125,21 @@ class GameSeeder extends Seeder
                 'category' => 'entertainment',
                 'requires_server' => false,
                 'id_label' => 'Email',
-                'description' => 'Nikmati musik tanpa iklan dengan Spotify Premium.',
+                'description' => 'Nikmati musik tanpa iklan dengan Spotify Premium.'
             ],
         ];
 
         foreach ($games as $index => $game) {
-            $game['sort_order'] = $index;
-            $game['cover_path'] = '/images/games/' . $game['slug'] . '.jpg';
-            Game::create($game);
+            $payload = array_merge($game, [
+                'sort_order' => $index,
+                'cover_path' => '/images/games/' . $game['slug'] . '.jpg',
+            ]);
+
+            // kunci unik: slug
+            Game::updateOrCreate(
+                ['slug' => $game['slug']],
+                Arr::except($payload, ['slug'])
+            );
         }
     }
 }

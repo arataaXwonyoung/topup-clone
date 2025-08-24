@@ -180,8 +180,29 @@ class User extends Authenticatable implements FilamentUser
     /**
      * Check if user account is active
      */
+    /**
+     * Check if user account is active
+     */
     public function isActive(): bool
     {
         return $this->is_active === true;
+    }
+
+    /**
+     * Relationships
+     */
+    public function orders()
+    {
+        return $this->hasMany(\App\Models\Order::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class);
+    }
+
+    public function supportTickets()
+    {
+        return $this->hasMany(\App\Models\SupportTicket::class);
     }
 }

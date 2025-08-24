@@ -72,25 +72,55 @@
         <h2 class="text-lg font-semibold">Pilih Nominal</h2>
     </div>
     
-    @if($game->denominations && $game->denominations->count() > 0)
+    {{-- Debug info --}}
+    @if(config('app.debug'))
+    <div class="mb-4 p-3 bg-gray-800 rounded text-xs">
+        <p>Debug: Game ID = {{ $game->id }}</p>
+        <p>Debug: Denominations count = {{ $game->denominations->count() }}</p>
+        <p>Debug: Active denominations = {{ $game->denominations->where('is_active', true)->count() }}</p>
+    </div>
+    @endif
+    
+    @php
+        $denominations = $game->denominations->where('is_active', true);
+    @endphp
+    
+    @if($denominations && $denominations->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            @foreach($game->denominations->where('is_active', true) as $denom)
-            <label class="relative cursor-pointer">
+            @foreach($denominations as $denom)
+            <label class="relative cursor-pointer block">
                 <input type="radio" 
                        name="denomination_id" 
                        value="{{ $denom->id }}"
                        x-model="formData.denomination_id"
                        @change="updateSummary({{ $denom->toJson() }})"
                        class="hidden peer">
-                <div class="glass p-4 rounded-lg border-2 border-gray-700 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 hover:border-gray-600 transition">
+                <div class="glass p-4 rounded-lg border-2 border-gray-700 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 hover:border-gray-600 transition-all duration-200">
                     @if($denom->is_hot)
-                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded font-bold">HOT</span>
+                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded font-bold z-10">HOT</span>
                     @endif
-                    <div class="font-semibold text-white">{{ $denom->name }}</div>
+                    
+                    @if($denom->is_promo)
+                    <span class="absolute -top-2 -left-2 bg-green-500 text-white text-xs px-2 py-1 rounded font-bold z-10">PROMO</span>
+                    @endif
+                    
+                    <div class="font-semibold text-white mb-1">{{ $denom->name }}</div>
+                    
                     @if($denom->bonus > 0)
-                    <div class="text-xs text-gray-400">{{ $denom->amount }} + {{ $denom->bonus }} Bonus</div>
+                    <div class="text-xs text-green-400 mb-1">
+                        {{ $denom->amount }} + {{ $denom->bonus }} Bonus
+                    </div>
                     @endif
-                    <div class="text-yellow-400 font-bold mt-2">Rp {{ number_format($denom->price, 0, ',', '.') }}</div>
+                    
+                    @if($denom->original_price && $denom->original_price > $denom->price)
+                    <div class="text-xs text-gray-500 line-through">
+                        Rp {{ number_format($denom->original_price, 0, ',', '.') }}
+                    </div>
+                    @endif
+                    
+                    <div class="text-yellow-400 font-bold mt-2">
+                        Rp {{ number_format($denom->price, 0, ',', '.') }}
+                    </div>
                 </div>
             </label>
             @endforeach
@@ -98,6 +128,7 @@
     @else
         <div class="text-center py-8">
             <p class="text-gray-400">Tidak ada nominal tersedia untuk game ini.</p>
+            <p class="text-xs text-gray-500 mt-2">Game ID: {{ $game->id }}</p>
         </div>
     @endif
 </div>
@@ -632,5 +663,13 @@ function checkoutForm() {
         }
     }
 }
+</script>
+
+@push('scripts')
+<script>
+    // Pastikan Lucide icons ter-render
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 </script>
 @endpush

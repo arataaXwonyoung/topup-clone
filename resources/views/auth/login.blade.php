@@ -6,22 +6,6 @@
 <div class="min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
     <div class="w-full max-w-md">
 
-        {{-- Back to Home --}}
-        <div class="mb-4">
-            <a href="{{ url('/') }}" class="inline-flex items-center text-sm text-gray-400 hover:text-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mr-1 h-4 w-4" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                </svg>
-                Kembali ke Beranda
-            </a>
-        </div>
-
-        <!-- Logo & Title -->
-        <div class="text-center mb-8">
-            <h1 class="neon-text mb-2 text-4xl font-bold text-yellow-400">⚡ Takapedia</h1>
-            <p class="text-gray-400">Masuk ke akun Anda</p>
-        </div>
 
         {{-- Jika masih login, beri opsi logout --}}
         @auth
@@ -120,8 +104,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <button type="button"
                             class="flex items-center justify-center rounded-lg border border-gray-700 px-4 py-2 transition hover:bg-gray-800">
-                        <img src="/images/google-icon.svg" alt="Google" class="mr-2 h-5 w-5">
-                        Google
+                        <img src="/images/google-icon.svg" alt="Google" class="mr-2 h-5 w-5.5">
                     </button>
                     <button type="button"
                             class="flex items-center justify-center rounded-lg border border-gray-700 px-4 py-2 transition hover:bg-gray-800">

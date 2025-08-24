@@ -17,19 +17,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Di bagian atas setelah use statements
-Route::get('/', function () {
-    if (auth()->check()) {
-        if (auth()->user()->is_admin) {
-            return redirect('/admin');
-        }
-        return redirect()->route('user.dashboard');
-    }
-    return view('home');
-})->name('home');
-
-
-
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/topup', [HomeController::class, 'index'])->name('topup');
@@ -46,6 +33,7 @@ Route::get('/kalkulator', [CalculatorController::class, 'index'])->name('calcula
 // Article Routes
 Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
+Route::post('/artikel/{slug}/increment-view', [ArticleController::class, 'incrementView'])->name('articles.increment-view');
 
 // Checkout Routes
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
@@ -55,14 +43,25 @@ Route::post('/checkout/validate-promo', [CheckoutController::class, 'validatePro
 Route::get('/invoice/{invoice_no}', [InvoiceController::class, 'show'])->name('invoices.show');
 Route::get('/invoice/{invoice_no}/download', [InvoiceController::class, 'download'])->name('invoices.download');
 
+// Order routes
+Route::post('/orders/{invoice_no}/review', [App\Http\Controllers\OrderController::class, 'review'])->name('orders.review');
+Route::get('/orders/{invoice_no}/reorder', [App\Http\Controllers\OrderController::class, 'reorder'])->name('orders.reorder');
+Route::delete('/orders/{invoice_no}/cancel', [App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
+
 // Webhook Routes (no CSRF protection)
 Route::post('/webhooks/{provider}', [WebhookController::class, 'handle'])
     ->name('webhooks.handle')
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-// Authenticated User Routes (lama)
+// Authenticated User Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Dashboard - redirect based on user type
+    Route::get('/dashboard', function () {
+        if (auth()->user()->is_admin) {
+            return redirect('/admin');
+        }
+        return redirect()->route('user.dashboard');
+    })->name('dashboard');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -85,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| User Routes (baru)
+| User Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
@@ -135,14 +134,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/support/{ticket}', [App\Http\Controllers\User\SupportController::class, 'show'])
         ->name('support.show');
 });
-
-// Update main dashboard route to redirect based on user type
-Route::get('/dashboard', function () {
-    if (auth()->user()->is_admin) {
-        return redirect('/admin');
-    }
-    return redirect()->route('user.dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 // Include auth routes from Breeze
 require __DIR__.'/auth.php';
