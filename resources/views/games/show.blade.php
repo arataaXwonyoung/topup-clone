@@ -7,7 +7,7 @@
     <!-- Game Header -->
     <div class="glass rounded-xl p-6 mb-8">
         <div class="flex items-center space-x-4">
-            <img src="{{ $game->cover_path }}" alt="{{ $game->name }}" class="w-20 h-20 rounded-lg">
+            <img src="{{ asset($game->cover_path) }}" alt="{{ $game->name }}" class="w-20 h-20 rounded-lg">
             <div>
                 <h1 class="text-2xl font-bold text-yellow-400">{{ $game->name }}</h1>
                 <p class="text-gray-400">{{ $game->publisher }}</p>
