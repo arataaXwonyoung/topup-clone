@@ -10,7 +10,7 @@ class Promo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'type', 'value', 'min_total', 'max_discount',
+        'name', 'code', 'description', 'type', 'value', 'min_total', 'max_discount',
         'quota', 'used_count', 'per_user_limit',
         'starts_at', 'ends_at', 'is_active', 'game_ids'
     ];

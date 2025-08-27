@@ -3,23 +3,25 @@
 @section('title', 'Cek Transaksi')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="glass rounded-xl p-6 mb-8">
-        <h1 class="text-3xl font-bold text-yellow-400 mb-4">Cek Status Transaksi</h1>
-        <p class="text-gray-400">Masukkan nomor invoice atau email untuk melihat status transaksi kamu.</p>
+<div class="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
+    <div class="glass rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+        <h1 class="text-2xl sm:text-3xl font-bold text-yellow-400 mb-4">Cek Status Transaksi</h1>
+        <p class="text-gray-400 text-sm sm:text-base">Masukkan nomor invoice atau email untuk melihat status transaksi kamu.</p>
     </div>
 
-    <div class="glass rounded-xl p-6">
-        <form method="GET" action="{{ route('transactions.check') }}">
-            <div class="flex space-x-3">
+    <div class="glass rounded-xl p-4 sm:p-6" style="pointer-events: auto; z-index: 100; position: relative;">
+        <form method="GET" action="{{ route('transactions.check') }}" style="pointer-events: auto; z-index: 200; position: relative;">
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                 <input type="text" 
                        name="invoice" 
                        placeholder="Nomor Invoice atau Email"
                        value="{{ request('invoice') }}"
-                       class="flex-1 px-4 py-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none"
+                       class="flex-1 px-4 py-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none text-base"
+                       style="pointer-events: auto !important; z-index: 300 !important; position: relative !important; font-size: 16px !important;"
                        required>
                 <button type="submit" 
-                        class="px-6 py-3 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition">
+                        class="px-6 py-3 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition w-full sm:w-auto"
+                        style="pointer-events: auto !important; z-index: 300 !important; position: relative !important; cursor: pointer !important;">
                     Cek Status
                 </button>
             </div>

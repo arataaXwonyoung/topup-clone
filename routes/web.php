@@ -22,8 +22,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/topup', [HomeController::class, 'index'])->name('topup');
 
 // Game Routes
+Route::get('/games', [GameController::class, 'index'])->name('games.index');
 Route::get('/g/{slug}', [GameController::class, 'show'])->name('games.show');
-Route::get('/games', [HomeController::class, 'index'])->name('games.index');
 
 // Feature Pages
 Route::get('/leaderboard', [HomeController::class, 'leaderboard'])->name('leaderboard');
@@ -43,10 +43,10 @@ Route::post('/checkout/validate-promo', [CheckoutController::class, 'validatePro
 Route::get('/invoice/{invoice_no}', [InvoiceController::class, 'show'])->name('invoices.show');
 Route::get('/invoice/{invoice_no}/download', [InvoiceController::class, 'download'])->name('invoices.download');
 
-// Order routes
-Route::post('/orders/{invoice_no}/review', [App\Http\Controllers\OrderController::class, 'review'])->name('orders.review');
-Route::get('/orders/{invoice_no}/reorder', [App\Http\Controllers\OrderController::class, 'reorder'])->name('orders.reorder');
-Route::delete('/orders/{invoice_no}/cancel', [App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
+// Order routes (commented out until OrderController is created)
+// Route::post('/orders/{invoice_no}/review', [App\Http\Controllers\OrderController::class, 'review'])->name('orders.review');
+// Route::get('/orders/{invoice_no}/reorder', [App\Http\Controllers\OrderController::class, 'reorder'])->name('orders.reorder');
+// Route::delete('/orders/{invoice_no}/cancel', [App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
 
 // Webhook Routes (no CSRF protection)
 Route::post('/webhooks/{provider}', [WebhookController::class, 'handle'])
@@ -99,6 +99,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
         ->name('orders.show');
     Route::get('/orders/{invoice}/invoice', [App\Http\Controllers\User\OrderController::class, 'downloadInvoice'])
         ->name('orders.invoice');
+    Route::delete('/orders/{invoice}/cancel', [App\Http\Controllers\User\OrderController::class, 'cancel'])
+        ->name('orders.cancel');
 
     // Profile
     Route::get('/profile', [App\Http\Controllers\User\ProfileController::class, 'edit'])
@@ -133,7 +135,59 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
         ->name('support.store');
     Route::get('/support/{ticket}', [App\Http\Controllers\User\SupportController::class, 'show'])
         ->name('support.show');
+
+    // Wishlist
+    Route::get('/wishlist', [App\Http\Controllers\User\WishlistController::class, 'index'])
+        ->name('wishlist.index');
+    Route::post('/wishlist/toggle', [App\Http\Controllers\User\WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
+    Route::post('/wishlist', [App\Http\Controllers\User\WishlistController::class, 'store'])
+        ->name('wishlist.store');
+    Route::delete('/wishlist', [App\Http\Controllers\User\WishlistController::class, 'destroy'])
+        ->name('wishlist.destroy');
+
+    // Rewards System
+    Route::get('/rewards', function() {
+        $user = auth()->user();
+        $nextTier = 'Diamond';
+        $tierProgress = 75;
+        $nextTierPoints = 10000;
+        return view('user.rewards.index', compact('user', 'nextTier', 'tierProgress', 'nextTierPoints'));
+    })->name('rewards.index');
+    Route::post('/rewards/redeem', [App\Http\Controllers\User\RewardController::class, 'redeem'])
+        ->name('rewards.redeem');
+
+    // Achievements System  
+    Route::get('/achievements', function() {
+        $unlockedCount = 8;
+        $totalCount = 24;
+        return view('user.achievements.index', compact('unlockedCount', 'totalCount'));
+    })->name('achievements.index');
+
+    // Gaming Profile & Stats
+    Route::get('/gaming-profile', function() {
+        $user = auth()->user();
+        $gamingLevel = 25;
+        $gamingScore = 8750;
+        $percentile = 15;
+        $levelProgress = 65;
+        $totalOrders = 48;
+        $uniqueGames = 12;
+        $totalSpent = 2450000;
+        $streakDays = 7;
+        $avgMonthlySpend = 150000;
+        $biggestOrder = 85000;
+        return view('user.gaming-profile.index', compact(
+            'user', 'gamingLevel', 'gamingScore', 'percentile', 'levelProgress',
+            'totalOrders', 'uniqueGames', 'totalSpent', 'streakDays', 'avgMonthlySpend', 'biggestOrder'
+        ));
+    })->name('gaming-profile.index');
 });
 
 // Include auth routes from Breeze
 require __DIR__.'/auth.php';
+
+// Test routes (remove in production)
+Route::get('/test-wishlist', function () {
+    return view('test-wishlist');
+})->name('test.wishlist');

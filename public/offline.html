@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Takapedia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0E0E0F 0%, #171721 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #FFEA00;
+        }
+        
+        p {
+            font-size: 16px;
+            color: #A8A8A8;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #FFEA00, #FFC700);
+            color: #000000;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 234, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .network-status {
+            margin-top: 24px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .status-offline {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #FCA5A5;
+        }
+        
+        .status-online {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86EFAC;
+        }
+        
+        @media (max-width: 480px) {
+            .offline-icon {
+                font-size: 60px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>Kamu Sedang Offline</h1>
+        <p>Sepertinya koneksi internet kamu bermasalah. Cek koneksi dan coba lagi.</p>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="location.reload()">
+                🔄 Coba Lagi
+            </button>
+            <a href="/" class="btn btn-secondary">
+                🏠 Kembali ke Home
+            </a>
+        </div>
+        
+        <div id="networkStatus" class="network-status status-offline">
+            📶 Status: Offline
+        </div>
+    </div>
+
+    <script>
+        // Check network status
+        function updateNetworkStatus() {
+            const statusEl = document.getElementById('networkStatus');
+            const isOnline = navigator.onLine;
+            
+            if (isOnline) {
+                statusEl.textContent = '📶 Status: Online';
+                statusEl.className = 'network-status status-online';
+                
+                // Auto reload when back online
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                statusEl.textContent = '📶 Status: Offline';
+                statusEl.className = 'network-status status-offline';
+            }
+        }
+        
+        // Listen for network status changes
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        
+        // Initial status check
+        updateNetworkStatus();
+        
+        // Periodic connectivity check
+        setInterval(() => {
+            fetch('/', { method: 'HEAD', mode: 'no-cors' })
+                .then(() => {
+                    if (!navigator.onLine) {
+                        // Force online status update
+                        window.dispatchEvent(new Event('online'));
+                    }
+                })
+                .catch(() => {
+                    if (navigator.onLine) {
+                        // Force offline status update
+                        window.dispatchEvent(new Event('offline'));
+                    }
+                });
+        }, 5000);
+    </script>
+</body>
+</html>

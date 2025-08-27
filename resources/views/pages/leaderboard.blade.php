@@ -2,29 +2,78 @@
 
 @section('title', 'Leaderboard - Top Spender')
 
+@push('styles')
+<style>
+    /* Leaderboard specific fixes */
+    .leaderboard-table {
+        position: relative !important;
+        z-index: 100 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: block !important;
+    }
+    
+    .leaderboard-table table,
+    .leaderboard-table tbody,
+    .leaderboard-table tr,
+    .leaderboard-table td,
+    .leaderboard-table th {
+        position: relative !important;
+        z-index: 100 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: table !important;
+    }
+    
+    .leaderboard-table tr {
+        display: table-row !important;
+    }
+    
+    .leaderboard-table td,
+    .leaderboard-table th {
+        display: table-cell !important;
+    }
+    
+    .glass {
+        position: relative !important;
+        z-index: 10 !important;
+        background: rgba(30, 30, 40, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+    
+    /* Fix hidden elements */
+    .leaderboard-content {
+        background: rgba(30, 30, 40, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        position: relative !important;
+        z-index: 50 !important;
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="glass rounded-xl p-6 mb-8 text-center">
-        <h1 class="text-3xl font-bold text-yellow-400 mb-4">🏆 Leaderboard</h1>
-        <p class="text-gray-400">Top Spender Bulan {{ now()->format('F Y') }}</p>
+<div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
+    <div class="glass rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-center">
+        <h1 class="text-2xl sm:text-3xl font-bold text-yellow-400 mb-4">🏆 Leaderboard</h1>
+        <p class="text-gray-400 text-sm sm:text-base">Top Spender Bulan {{ now()->format('F Y') }}</p>
     </div>
 
-    <div class="glass rounded-xl p-6">
+    <div class="glass leaderboard-content rounded-xl p-4 sm:p-6">
         @if($topSpenders && $topSpenders->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="leaderboard-table overflow-x-auto">
+            <table class="w-full text-sm sm:text-base">
                 <thead>
                     <tr class="border-b border-gray-700">
-                        <th class="text-left py-3 px-4">Rank</th>
-                        <th class="text-left py-3 px-4">User</th>
-                        <th class="text-center py-3 px-4">Total Order</th>
-                        <th class="text-right py-3 px-4">Total Spent</th>
+                        <th class="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Rank</th>
+                        <th class="text-left py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">User</th>
+                        <th class="text-center py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm hidden sm:table-cell">Total Order</th>
+                        <th class="text-right py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm">Total Spent</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($topSpenders as $index => $spender)
                     <tr class="border-b border-gray-800 hover:bg-gray-800/50">
-                        <td class="py-3 px-4">
+                        <td class="py-2 sm:py-3 px-2 sm:px-4">
                             @if($index == 0)
                                 <span class="text-2xl">🥇</span>
                             @elseif($index == 1)
@@ -35,17 +84,17 @@
                                 <span class="text-gray-400">#{{ $index + 1 }}</span>
                             @endif
                         </td>
-                        <td class="py-3 px-4">
+                        <td class="py-2 sm:py-3 px-2 sm:px-4">
                             <div>
-                                <div class="font-semibold">{{ substr($spender->email, 0, 3) }}***</div>
-                                <div class="text-sm text-gray-400">{{ substr($spender->whatsapp, 0, 4) }}****</div>
+                                <div class="font-semibold text-xs sm:text-sm">{{ substr($spender->email, 0, 3) }}***</div>
+                                <div class="text-xs text-gray-400 hidden sm:block">{{ substr($spender->whatsapp, 0, 4) }}****</div>
                             </div>
                         </td>
-                        <td class="py-3 px-4 text-center">
-                            <span class="px-2 py-1 bg-gray-700 rounded">{{ $spender->order_count }}</span>
+                        <td class="py-2 sm:py-3 px-2 sm:px-4 text-center hidden sm:table-cell">
+                            <span class="px-2 py-1 bg-gray-700 rounded text-xs">{{ $spender->order_count }}</span>
                         </td>
-                        <td class="py-3 px-4 text-right">
-                            <span class="text-yellow-400 font-bold">
+                        <td class="py-2 sm:py-3 px-2 sm:px-4 text-right">
+                            <span class="text-yellow-400 font-bold text-xs sm:text-sm">
                                 Rp {{ number_format($spender->total_spent, 0, ',', '.') }}
                             </span>
                         </td>

@@ -14,11 +14,23 @@ class HomeController extends Controller
     public function index()
     {
         try {
-            // Get active games with denominations
-            $games = Game::where('is_active', true)
+            // Get active games with denominations and wishlist status for authenticated users
+            $gamesQuery = Game::where('is_active', true)
                 ->with(['denominations' => function ($query) {
                     $query->where('is_active', true);
                 }])
+                ->withCount(['orders' => function ($query) {
+                    $query->whereIn('status', ['PAID', 'DELIVERED']);
+                }]);
+            
+            // If user is authenticated, load wishlist relationships
+            if (auth()->check()) {
+                $gamesQuery->with(['wishlistedByUsers' => function ($query) {
+                    $query->where('user_id', auth()->id());
+                }]);
+            }
+            
+            $games = $gamesQuery->orderByDesc('orders_count') // Popular games first
                 ->orderBy('sort_order')
                 ->orderBy('name')
                 ->get();
@@ -34,8 +46,8 @@ class HomeController extends Controller
                 ->get();
             
             // Get active banners
-            $banners = Banner::where('is_active', true)
-                ->where('position', 'hero')
+            $banners = Banner::active()
+                ->byPosition('hero')
                 ->orderBy('sort_order')
                 ->get();
             
@@ -66,6 +78,7 @@ class HomeController extends Controller
         // Get top spenders
         $topSpenders = \App\Models\User::select('users.*')
             ->selectRaw('COALESCE(SUM(orders.total), 0) as total_spent')
+            ->selectRaw('COUNT(orders.id) as order_count')
             ->leftJoin('orders', function($join) {
                 $join->on('users.id', '=', 'orders.user_id')
                     ->whereIn('orders.status', ['PAID', 'DELIVERED']);
@@ -75,7 +88,7 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
         
-        return view('leaderboard', compact('topSpenders'));
+        return view('pages.leaderboard', compact('topSpenders'));
     }
     
     public function checkTransaction(Request $request)
@@ -88,7 +101,7 @@ class HomeController extends Controller
                 ->first();
         }
         
-        return view('check-transaction', compact('order'));
+        return view('pages.check-transaction', compact('order'));
     }
     
     public function orderHistory()

@@ -24,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PaymentService::class, function ($app) {
             return $app->make(PaymentManager::class)->driver();
         });
+
+        // Register custom Filament logout response
+        $this->app->bind(
+            \Filament\Http\Responses\Auth\Contracts\LogoutResponse::class,
+            \App\Http\Responses\AdminLogoutResponse::class
+        );
     }
 
     /**

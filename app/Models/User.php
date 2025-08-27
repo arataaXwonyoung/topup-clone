@@ -20,6 +20,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'is_admin',
         'phone',
+        'phone_verified_at',
         'whatsapp',
         'date_of_birth',
         'gender',
@@ -31,34 +32,61 @@ class User extends Authenticatable implements FilamentUser
         'avatar',
         'balance',
         'points',
+        'loyalty_points',
         'level',
         'is_active',
+        'is_suspended',
+        'suspended_until',
+        'suspension_reason',
+        'daily_limit',
+        'monthly_limit',
+        'max_orders_per_day',
+        'notes',
         'is_verified',
         'referral_code',
         'referred_by',
         'preferences',
+        'notification_preferences',
         'last_login_at',
         'last_login_ip',
         'login_count',
+        'two_factor_enabled',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
+        'last_login_date',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_admin' => 'boolean',
         'is_active' => 'boolean',
+        'is_suspended' => 'boolean',
+        'suspended_until' => 'datetime',
+        'daily_limit' => 'decimal:2',
+        'monthly_limit' => 'decimal:2',
+        'max_orders_per_day' => 'integer',
         'is_verified' => 'boolean',
         'balance' => 'decimal:2',
         'points' => 'integer',
+        'loyalty_points' => 'integer',
         'date_of_birth' => 'date',
         'preferences' => 'array',
+        'notification_preferences' => 'array',
         'last_login_at' => 'datetime',
         'login_count' => 'integer',
+        'two_factor_enabled' => 'boolean',
+        'two_factor_confirmed_at' => 'datetime',
+        'two_factor_recovery_codes' => 'array',
     ];
 
     /**
@@ -66,7 +94,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->is_admin === true && $this->is_active === true;
+        return $this->is_admin === true && $this->is_active === true && !$this->is_suspended;
     }
 
     /**
@@ -204,5 +232,91 @@ class User extends Authenticatable implements FilamentUser
     public function supportTickets()
     {
         return $this->hasMany(\App\Models\SupportTicket::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function wishlistedGames()
+    {
+        return $this->belongsToMany(Game::class, 'wishlists');
+    }
+
+    public function referredUsers()
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
+
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    // Gamification Relationships
+    public function userPoints()
+    {
+        return $this->hasOne(UserPoint::class);
+    }
+
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class);
+    }
+
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class, 'user_achievements')
+            ->withPivot(['progress', 'is_unlocked', 'unlocked_at'])
+            ->withTimestamps();
+    }
+
+    public function unlockedAchievements()
+    {
+        return $this->achievements()->wherePivot('is_unlocked', true);
+    }
+
+    public function gamingProfile()
+    {
+        return $this->hasOne(UserGamingProfile::class);
+    }
+
+    public function rewardRedemptions()
+    {
+        return $this->hasMany(RewardRedemption::class);
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    // 2FA Methods
+    public function generateReferralCode()
+    {
+        if (!$this->referral_code) {
+            $this->referral_code = strtoupper(Str::random(8));
+            $this->save();
+        }
+        return $this->referral_code;
+    }
+
+    public function hasTwoFactorEnabled(): bool
+    {
+        return $this->two_factor_enabled && !empty($this->two_factor_secret);
+    }
+
+    public function generateTwoFactorRecoveryCodes(): array
+    {
+        $codes = [];
+        for ($i = 0; $i < 8; $i++) {
+            $codes[] = strtoupper(Str::random(6));
+        }
+        
+        $this->two_factor_recovery_codes = $codes;
+        $this->save();
+        
+        return $codes;
     }
 }

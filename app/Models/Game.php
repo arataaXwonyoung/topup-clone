@@ -13,13 +13,15 @@ class Game extends Model
     protected $fillable = [
         'name', 'slug', 'publisher', 'cover_path', 'description',
         'category', 'is_hot', 'is_active', 'sort_order',
-        'requires_server', 'id_label', 'server_label', 'metadata'
+        'digiflazz_code', 'enable_validation', 'id_label', 'requires_server', 
+        'server_label', 'validation_instructions', 'metadata'
     ];
 
     protected $casts = [
         'is_hot' => 'boolean',
         'is_active' => 'boolean',
         'requires_server' => 'boolean',
+        'enable_validation' => 'boolean',
         'metadata' => 'array',
     ];
 
@@ -36,6 +38,16 @@ class Game extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function wishlistedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'wishlists');
     }
 
     public function getAverageRatingAttribute(): float

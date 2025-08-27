@@ -29,4 +29,15 @@ class Dashboard extends BaseDashboard
     {
         return 2;
     }
+    
+    public function getWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\StatsOverviewWidget::class,
+            \App\Filament\Widgets\SystemStatusWidget::class,
+            \App\Filament\Widgets\RevenueChartWidget::class,
+            \App\Filament\Widgets\PopularGamesChartWidget::class,
+            \App\Filament\Widgets\LatestOrdersWidget::class,
+        ];
+    }
 }

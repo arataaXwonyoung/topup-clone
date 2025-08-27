@@ -4,61 +4,86 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Game Header -->
-    <div class="glass rounded-xl p-6 mb-8">
-        <div class="flex items-center space-x-4">
-            <img src="{{ asset($game->cover_path) }}" alt="{{ $game->name }}" class="w-20 h-20 rounded-lg">
-            <div>
-                <h1 class="text-2xl font-bold text-yellow-400">{{ $game->name }}</h1>
-                <p class="text-gray-400">{{ $game->publisher }}</p>
-                <div class="flex items-center mt-2">
-                    <div class="flex text-yellow-400">
-                        @for($i = 1; $i <= 5; $i++)
-                            @if($i <= floor($game->average_rating))
-                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                            @elseif($i - 0.5 <= $game->average_rating)
-                                <i data-lucide="star-half" class="w-4 h-4 fill-current"></i>
-                            @else
-                                <i data-lucide="star" class="w-4 h-4"></i>
-                            @endif
-                        @endfor
+    <!-- Enhanced Game Header -->
+    <div class="glass rounded-2xl p-8 mb-8 fade-in-up relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-orange-500/10 pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8 relative z-10">
+            <div class="relative group flex-shrink-0">
+                <img src="{{ asset($game->cover_path) }}" alt="{{ $game->name }}" 
+                     class="w-32 h-32 md:w-40 md:h-40 rounded-2xl shadow-2xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-3xl">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                    TOP UP
+                </div>
+            </div>
+            <div class="flex-1">
+                <h1 class="text-3xl md:text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 bg-clip-text text-transparent mb-3"
+                    style="background-size: 300% 300%; animation: gradient-shift 3s ease infinite;">
+                    {{ $game->name }}
+                </h1>
+                <p class="text-gray-300 text-xl mb-4">{{ $game->publisher }}</p>
+                <div class="flex flex-wrap items-center gap-6">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex text-yellow-400">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= floor($game->average_rating))
+                                    <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                                @elseif($i - 0.5 <= $game->average_rating)
+                                    <i data-lucide="star-half" class="w-5 h-5 fill-current"></i>
+                                @else
+                                    <i data-lucide="star" class="w-5 h-5"></i>
+                                @endif
+                            @endfor
+                        </div>
+                        <span class="text-white font-semibold text-lg">{{ number_format($game->average_rating, 1) }}</span>
+                        <span class="text-gray-400">({{ $game->review_count }} ulasan)</span>
                     </div>
-                    <span class="ml-2 text-sm text-gray-400">{{ number_format($game->average_rating, 1) }} ({{ $game->review_count }} ulasan)</span>
+                    <div class="flex items-center space-x-2 text-green-400">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                        <span class="font-semibold">Proses Otomatis</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-blue-400">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        <span class="font-semibold">100% Aman</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
         <!-- Left Column - Stepper Form -->
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-3 space-y-6">
             <form id="checkoutForm" x-data="checkoutForm()" @submit.prevent="submitOrder">
                 <!-- Step 1: Account Info -->
-                <div class="glass rounded-xl p-6 mb-6">
-                    <div class="flex items-center mb-4">
-                        <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">1</span>
-                        <h2 class="text-lg font-semibold">Masukkan Data Akun</h2>
+                <div class="glass rounded-xl p-6 mb-6 fade-in-up step-card border border-gray-700/50" style="animation-delay: 0.1s;">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg text-lg">1</span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Masukkan Data Akun</h2>
+                            <p class="text-gray-400 text-sm">Masukkan data akun game kamu dengan benar</p>
+                        </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2">{{ $game->id_label }}</label>
+                            <label class="block text-sm font-semibold mb-3 text-gray-200">{{ $game->id_label }}</label>
                             <input type="text" 
                                    x-model="formData.account_id"
                                    name="account_id" 
                                    placeholder="Masukkan {{ $game->id_label }}"
-                                   class="w-full px-4 py-2 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none"
+                                   class="w-full px-4 py-4 bg-gray-800/80 rounded-lg border-2 border-gray-700 focus:border-yellow-400 focus:outline-none transition-all text-lg"
                                    required>
                         </div>
                         
                         @if($game->requires_server)
                         <div>
-                            <label class="block text-sm font-medium mb-2">{{ $game->server_label }}</label>
+                            <label class="block text-sm font-semibold mb-3 text-gray-200">{{ $game->server_label }}</label>
                             <input type="text" 
                                    x-model="formData.server_id"
                                    name="server_id" 
                                    placeholder="Masukkan {{ $game->server_label }}"
-                                   class="w-full px-4 py-2 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none"
+                                   class="w-full px-4 py-4 bg-gray-800/80 rounded-lg border-2 border-gray-700 focus:border-yellow-400 focus:outline-none transition-all text-lg"
                                    required>
                         </div>
                         @endif
@@ -66,107 +91,113 @@
                 </div>
                 
                 <!-- Step 2: Select Denomination -->
-<div class="glass rounded-xl p-6 mb-6">
-    <div class="flex items-center mb-4">
-        <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">2</span>
-        <h2 class="text-lg font-semibold">Pilih Nominal</h2>
-    </div>
-    
-    {{-- Debug info --}}
-    @if(config('app.debug'))
-    <div class="mb-4 p-3 bg-gray-800 rounded text-xs">
-        <p>Debug: Game ID = {{ $game->id }}</p>
-        <p>Debug: Denominations count = {{ $game->denominations->count() }}</p>
-        <p>Debug: Active denominations = {{ $game->denominations->where('is_active', true)->count() }}</p>
-    </div>
-    @endif
-    
-    @php
-        $denominations = $game->denominations->where('is_active', true);
-    @endphp
-    
-    @if($denominations && $denominations->count() > 0)
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            @foreach($denominations as $denom)
-            <label class="relative cursor-pointer block">
-                <input type="radio" 
-                       name="denomination_id" 
-                       value="{{ $denom->id }}"
-                       x-model="formData.denomination_id"
-                       @change="updateSummary({{ $denom->toJson() }})"
-                       class="hidden peer">
-                <div class="glass p-4 rounded-lg border-2 border-gray-700 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 hover:border-gray-600 transition-all duration-200">
-                    @if($denom->is_hot)
-                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded font-bold z-10">HOT</span>
-                    @endif
-                    
-                    @if($denom->is_promo)
-                    <span class="absolute -top-2 -left-2 bg-green-500 text-white text-xs px-2 py-1 rounded font-bold z-10">PROMO</span>
-                    @endif
-                    
-                    <div class="font-semibold text-white mb-1">{{ $denom->name }}</div>
-                    
-                    @if($denom->bonus > 0)
-                    <div class="text-xs text-green-400 mb-1">
-                        {{ $denom->amount }} + {{ $denom->bonus }} Bonus
+                <div class="glass rounded-xl p-6 mb-6 fade-in-up step-card border border-gray-700/50" style="animation-delay: 0.2s;">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg text-lg">2</span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Pilih Nominal</h2>
+                            <p class="text-gray-400 text-sm">Pilih nominal yang sesuai dengan kebutuhan kamu</p>
+                        </div>
                     </div>
-                    @endif
                     
-                    @if($denom->original_price && $denom->original_price > $denom->price)
-                    <div class="text-xs text-gray-500 line-through">
-                        Rp {{ number_format($denom->original_price, 0, ',', '.') }}
-                    </div>
-                    @endif
                     
-                    <div class="text-yellow-400 font-bold mt-2">
-                        Rp {{ number_format($denom->price, 0, ',', '.') }}
-                    </div>
+                    @php
+                        $denominations = $game->denominations->where('is_active', true);
+                    @endphp
+                    
+                    @if($denominations && $denominations->count() > 0)
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style="display: grid !important; opacity: 1 !important; visibility: visible !important;">
+                            @foreach($denominations as $denom)
+                            <div style="display: block !important; opacity: 1 !important; visibility: visible !important;">
+                                <input type="radio" 
+                                       name="denomination_id" 
+                                       value="{{ $denom->id }}"
+                                       id="denom_{{ $denom->id }}"
+                                       x-model="formData.denomination_id"
+                                       @change="updateSummary({{ $denom->toJson() }})"
+                                       class="hidden peer">
+                                <label for="denom_{{ $denom->id }}" class="block cursor-pointer" style="display: block !important; opacity: 1 !important; visibility: visible !important;">
+                                    <div class="bg-gray-800 border-2 border-gray-700 rounded-lg p-4 hover:border-yellow-400 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 transition-all duration-200 relative min-h-[110px] flex flex-col justify-between" style="display: flex !important; opacity: 1 !important; visibility: visible !important;">
+                                        @if($denom->is_hot ?? false)
+                                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">HOT</span>
+                                        @endif
+                                        
+                                        @if($denom->is_promo ?? false)
+                                        <span class="absolute -top-2 -left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-bold">PROMO</span>
+                                        @endif
+                                        
+                                        <div>
+                                            <h4 class="font-bold text-white text-sm mb-1">{{ $denom->name }}</h4>
+                                            
+                                            @if(isset($denom->bonus) && $denom->bonus > 0)
+                                            <p class="text-xs text-green-400 mb-2">
+                                                {{ $denom->amount ?? '' }}{{ $denom->bonus ? ' + ' . $denom->bonus . ' Bonus' : '' }}
+                                            </p>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="mt-auto">
+                                            @if(isset($denom->original_price) && $denom->original_price > $denom->price)
+                                            <p class="text-xs text-gray-500 line-through mb-1">
+                                                Rp {{ number_format($denom->original_price, 0, ',', '.') }}
+                                            </p>
+                                            @endif
+                                            
+                                            <p class="text-yellow-400 font-bold text-base">
+                                                Rp {{ number_format($denom->price, 0, ',', '.') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-12" style="display: block !important; opacity: 1 !important; visibility: visible !important;">
+                            <div class="text-gray-400">
+                                <i data-lucide="package-x" class="w-16 h-16 mx-auto mb-4 opacity-50"></i>
+                                <p class="text-lg mb-2">Belum ada nominal tersedia</p>
+                                <p class="text-sm">Game: {{ $game->name }} (ID: {{ $game->id }})</p>
+                                <p class="text-sm">Silakan pilih game lain atau hubungi admin</p>
+                                <a href="{{ route('home') }}" class="mt-4 inline-block px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-500 transition">
+                                    Kembali ke Beranda
+                                </a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
-            </label>
-            @endforeach
-        </div>
-    @else
-        <div class="text-center py-8">
-            <p class="text-gray-400">Tidak ada nominal tersedia untuk game ini.</p>
-            <p class="text-xs text-gray-500 mt-2">Game ID: {{ $game->id }}</p>
-        </div>
-    @endif
-</div>
                 
-                <!-- Step 3: Summary -->
-                <div class="glass rounded-xl p-6 mb-6">
-                    <div class="flex items-center mb-4">
-                        <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">3</span>
-                        <h2 class="text-lg font-semibold">Ringkasan</h2>
+                <!-- Step 3: Payment Method -->
+                <div class="glass rounded-xl p-6 mb-6 fade-in-up step-card border border-gray-700/50" style="animation-delay: 0.3s;">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg text-lg">3</span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Pilih Pembayaran</h2>
+                            <p class="text-gray-400 text-sm">Pilih metode pembayaran yang kamu inginkan</p>
+                        </div>
                     </div>
                     
-                    <div class="space-y-2" x-show="selectedDenom">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Item:</span>
-                            <span x-text="selectedDenom?.name"></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Harga:</span>
-                            <span x-text="formatCurrency(selectedDenom?.price)"></span>
-                        </div>
-                    </div>
+                    @include('components.payment-methods')
                 </div>
                 
                 <!-- Step 4: Promo Code -->
-                <div class="glass rounded-xl p-6 mb-6">
-                    <div class="flex items-center mb-4">
-                        <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">4</span>
-                        <h2 class="text-lg font-semibold">Kode Promo</h2>
+                <div class="glass rounded-xl p-6 mb-6 fade-in-up step-card border border-gray-700/50" style="animation-delay: 0.4s;">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg text-lg">4</span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Kode Promo</h2>
+                            <p class="text-gray-400 text-sm">Gunakan kode promo untuk mendapatkan diskon</p>
+                        </div>
                     </div>
                     
-                    <div class="flex space-x-2">
+                    <div class="flex flex-col sm:flex-row gap-3">
                         <input type="text" 
                                x-model="formData.promo_code"
                                placeholder="Ketik Kode Promo Kamu"
-                               class="flex-1 px-4 py-2 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none">
+                               class="flex-1 px-4 py-3 bg-gray-800/80 rounded-lg border-2 border-gray-700 focus:border-yellow-400 focus:outline-none transition-all">
                         <button type="button" 
                                 @click="applyPromo"
-                                class="px-6 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-500 transition">
+                                class="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-lg hover:from-yellow-500 hover:to-orange-600 transition font-bold whitespace-nowrap">
                             Gunakan
                         </button>
                     </div>
@@ -177,212 +208,196 @@
                          class="mt-2 text-sm"></div>
                     
                     <!-- Promo Suggestions -->
-                    <div class="mt-4 flex items-center space-x-2">
-                        <i data-lucide="tag" class="w-4 h-4 text-yellow-400"></i>
-                        <button type="button" 
-                                @click="formData.promo_code = 'NEWUSER10'; applyPromo()"
-                                class="text-sm text-yellow-400 hover:underline">
-                            Pakai Promo Yang Tersedia
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Step 5: Payment Method -->
-                <div class="glass rounded-xl p-6 mb-6">
-                    <div class="flex items-center mb-4">
-                        <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">5</span>
-                        <h2 class="text-lg font-semibold">Pilih Pembayaran</h2>
-                    </div>
-                    
-                    <!-- QRIS -->
-                    <div class="mb-4">
-                        <label class="cursor-pointer">
-                            <input type="radio" 
-                                   name="payment_method" 
-                                   value="QRIS"
-                                   x-model="formData.payment_method"
-                                   class="hidden peer">
-                            <div class="glass p-4 rounded-lg border-2 border-gray-700 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 hover:border-gray-600 transition">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="/images/qris-logo.png" alt="QRIS" class="h-8">
-                                        <span class="font-semibold">QRIS (All Payment)</span>
-                                    </div>
-                                    <span class="text-yellow-400">Rp 1.000</span>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                    
-                    <!-- E-Wallet -->
-                    <div class="mb-4" x-data="{ open: false }">
-                        <button type="button" 
-                                @click="open = !open"
-                                class="w-full text-left glass p-4 rounded-lg border-2 border-gray-700 hover:border-gray-600 transition">
-                            <div class="flex items-center justify-between">
-                                <span class="font-semibold">E-Wallet</span>
-                                <i data-lucide="chevron-down" class="w-5 h-5" :class="{ 'rotate-180': open }"></i>
-                            </div>
-                        </button>
-                        
-                        <div x-show="open" x-transition class="mt-2 space-y-2">
-                            @foreach(['DANA' => 'dana', 'OVO' => 'ovo', 'GoPay' => 'gopay', 'ShopeePay' => 'shopeepay'] as $name => $value)
-                            <label class="cursor-pointer">
-                                <input type="radio" 
-                                       name="payment_method" 
-                                       value="EWALLET"
-                                       x-model="formData.payment_method"
-                                       @change="formData.payment_channel = '{{ $value }}'"
-                                       class="hidden peer">
-                                <div class="glass p-3 rounded-lg border-2 border-gray-700 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 hover:border-gray-600 transition ml-4">
-                                    <div class="flex items-center justify-between">
-                                        <span>{{ $name }}</span>
-                                        <span class="text-yellow-400">Rp 1.500</span>
-                                    </div>
-                                </div>
-                            </label>
-                            @endforeach
+                    <div class="mt-6 p-4 bg-gray-800/50 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i data-lucide="tag" class="w-5 h-5 text-yellow-400"></i>
+                            <span class="font-semibold text-white">Promo Tersedia:</span>
                         </div>
-                    </div>
-                    
-                    <!-- Virtual Account -->
-                    <div x-data="{ open: false }">
-                        <button type="button" 
-                                @click="open = !open"
-                                class="w-full text-left glass p-4 rounded-lg border-2 border-gray-700 hover:border-gray-600 transition">
-                            <div class="flex items-center justify-between">
-                                <span class="font-semibold">Virtual Account</span>
-                                <i data-lucide="chevron-down" class="w-5 h-5" :class="{ 'rotate-180': open }"></i>
-                            </div>
-                        </button>
-                        
-                        <div x-show="open" x-transition class="mt-2 space-y-2">
-                            @foreach(['BCA' => 'bca', 'BNI' => 'bni', 'BRI' => 'bri', 'Mandiri' => 'mandiri'] as $name => $value)
-                            <label class="cursor-pointer">
-                                <input type="radio" 
-                                       name="payment_method" 
-                                       value="VA"
-                                       x-model="formData.payment_method"
-                                       @change="formData.payment_channel = '{{ $value }}'"
-                                       class="hidden peer">
-                                <div class="glass p-3 rounded-lg border-2 border-gray-700 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 hover:border-gray-600 transition ml-4">
-                                    <div class="flex items-center justify-between">
-                                        <span>{{ $name }}</span>
-                                        <span class="text-yellow-400">Rp 2.500</span>
-                                    </div>
-                                </div>
-                            </label>
-                            @endforeach
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" 
+                                    @click="formData.promo_code = 'NEWUSER10'; applyPromo()"
+                                    class="px-4 py-2 bg-yellow-400/20 text-yellow-400 border border-yellow-400/50 rounded-lg hover:bg-yellow-400/30 transition text-sm font-medium">
+                                NEWUSER10
+                            </button>
+                            <button type="button" 
+                                    @click="formData.promo_code = 'DISKON5'; applyPromo()"
+                                    class="px-4 py-2 bg-green-400/20 text-green-400 border border-green-400/50 rounded-lg hover:bg-green-400/30 transition text-sm font-medium">
+                                DISKON5
+                            </button>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Step 6: Contact Details -->
-                <div class="glass rounded-xl p-6 mb-6">
-                    <div class="flex items-center mb-4">
-                        <span class="bg-yellow-400 text-gray-900 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">6</span>
-                        <h2 class="text-lg font-semibold">Detail Kontak</h2>
-                    </div>
-                    
-                    <div class="space-y-4">
+                <!-- Step 5: Contact Details -->
+                <div class="glass rounded-xl p-6 mb-6 fade-in-up step-card border border-gray-700/50" style="animation-delay: 0.5s;">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg text-lg">5</span>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <h2 class="text-2xl font-bold text-white">Detail Kontak</h2>
+                            <p class="text-gray-400 text-sm">Masukkan email dan nomor WhatsApp aktif kamu</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold mb-3 text-gray-200">Email</label>
                             <input type="email" 
                                    x-model="formData.email"
                                    placeholder="example@gmail.com"
-                                   class="w-full px-4 py-2 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none"
+                                   class="w-full px-4 py-4 bg-gray-800/80 rounded-lg border-2 border-gray-700 focus:border-yellow-400 focus:outline-none transition-all text-lg"
                                    required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium mb-2">No. WhatsApp</label>
+                            <label class="block text-sm font-semibold mb-3 text-gray-200">No. WhatsApp</label>
                             <div class="flex">
-                                <span class="px-3 py-2 bg-gray-800 border border-r-0 border-gray-700 rounded-l-lg">
+                                <span class="px-4 py-4 bg-gray-800/80 border-2 border-r-0 border-gray-700 rounded-l-lg font-semibold">
                                     🇮🇩 +62
                                 </span>
                                 <input type="tel" 
                                        x-model="formData.whatsapp"
                                        placeholder="812345678"
-                                       class="flex-1 px-4 py-2 bg-gray-800 rounded-r-lg border border-gray-700 focus:border-yellow-400 focus:outline-none"
+                                       class="flex-1 px-4 py-4 bg-gray-800/80 rounded-r-lg border-2 border-gray-700 focus:border-yellow-400 focus:outline-none transition-all text-lg"
                                        required>
                             </div>
-                            <p class="text-xs text-gray-400 mt-1">*Nomor ini akan dihubungi jika terjadi masalah</p>
+                            <p class="text-xs text-gray-400 mt-2">*Nomor ini akan dihubungi jika terjadi masalah</p>
                         </div>
                     </div>
                 </div>
                 
+                
                 <!-- Description -->
-                <div class="glass rounded-xl p-6">
-                    <h3 class="text-lg font-semibold mb-4 text-yellow-400">Deskripsi {{ $game->name }}</h3>
-                    <p class="text-gray-400">{{ $game->description }}</p>
+                <div class="glass rounded-xl p-6 mb-8 fade-in-up border border-gray-700/50" style="animation-delay: 0.6s;">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 w-12 h-12 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg text-lg">ℹ️</span>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Tentang {{ $game->name }}</h3>
+                            <p class="text-gray-400 text-sm">Informasi lengkap tentang game ini</p>
+                        </div>
+                    </div>
+                    <div class="prose prose-invert max-w-none">
+                        <p class="text-gray-300 leading-relaxed text-lg">{{ $game->description }}</p>
+                    </div>
+                    
+                    <!-- Game Features -->
+                    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center p-3 bg-gray-800/50 rounded-lg">
+                            <i data-lucide="zap" class="w-8 h-8 text-yellow-400 mx-auto mb-2"></i>
+                            <div class="text-sm font-semibold text-white">Instan</div>
+                            <div class="text-xs text-gray-400">Proses otomatis</div>
+                        </div>
+                        <div class="text-center p-3 bg-gray-800/50 rounded-lg">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-green-400 mx-auto mb-2"></i>
+                            <div class="text-sm font-semibold text-white">Aman</div>
+                            <div class="text-xs text-gray-400">100% terpercaya</div>
+                        </div>
+                        <div class="text-center p-3 bg-gray-800/50 rounded-lg">
+                            <i data-lucide="headphones" class="w-8 h-8 text-blue-400 mx-auto mb-2"></i>
+                            <div class="text-sm font-semibold text-white">Support</div>
+                            <div class="text-xs text-gray-400">24/7 online</div>
+                        </div>
+                        <div class="text-center p-3 bg-gray-800/50 rounded-lg">
+                            <i data-lucide="award" class="w-8 h-8 text-purple-400 mx-auto mb-2"></i>
+                            <div class="text-sm font-semibold text-white">Terpercaya</div>
+                            <div class="text-xs text-gray-400">Ribuan customer</div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
         
         <!-- Right Column - Summary Panel -->
         <div class="lg:col-span-1">
-            <div class="glass rounded-xl p-6 sticky top-20">
-                <h3 class="text-lg font-semibold mb-4">Ulasan dan Rating</h3>
+            <div class="glass rounded-xl p-6 sticky top-8 border border-gray-700/50 fade-in-up" style="animation-delay: 0.7s;">
+                <h3 class="text-xl font-bold mb-6 text-yellow-400">Ringkasan Pesanan</h3>
                 
-                <div class="text-center mb-6">
-                    <div class="text-4xl font-bold text-yellow-400">{{ number_format($game->average_rating, 1) }}</div>
-                    <div class="flex justify-center text-yellow-400 my-2">
-                        @for($i = 1; $i <= 5; $i++)
-                            @if($i <= floor($game->average_rating))
-                                <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                            @else
-                                <i data-lucide="star" class="w-5 h-5"></i>
-                            @endif
-                        @endfor
+                <!-- Game Info -->
+                <div class="text-center mb-6 p-4 bg-gray-800/50 rounded-lg">
+                    <img src="{{ asset($game->cover_path) }}" alt="{{ $game->name }}" 
+                         class="w-16 h-16 mx-auto rounded-lg mb-3 shadow-lg">
+                    <h4 class="font-bold text-white mb-2">{{ $game->name }}</h4>
+                    <div class="flex justify-center items-center space-x-2 text-sm">
+                        <div class="flex text-yellow-400">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= floor($game->average_rating))
+                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                @else
+                                    <i data-lucide="star" class="w-4 h-4"></i>
+                                @endif
+                            @endfor
+                        </div>
+                        <span class="text-white font-medium">{{ number_format($game->average_rating, 1) }}</span>
+                        <span class="text-gray-400">({{ $game->review_count }})</span>
                     </div>
-                    <p class="text-sm text-gray-400">Berdasarkan total {{ $game->review_count }} rating</p>
-                </div>
-                
-                <div class="mb-6">
-                    <h4 class="font-semibold mb-2">Butuh Bantuan?</h4>
-                    <p class="text-sm text-gray-400">Kamu bisa hubungi admin disini.</p>
                 </div>
                 
                 <!-- Live Summary -->
-                <div class="border-t border-gray-700 pt-4" x-data="checkoutForm()" x-show="selectedDenom">
-                    <h4 class="font-semibold mb-3">Detail Pembelian</h4>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Produk:</span>
-                            <span>{{ $game->name }}</span>
-                        </div>
-                        <div class="flex justify-between">
+                <div class="mb-6 summary-section" x-show="selectedDenom">
+                    <h4 class="font-bold mb-4 text-white">Detail Pembelian</h4>
+                    <div class="space-y-3 text-sm bg-gray-800/30 rounded-lg p-4">
+                        <div class="flex justify-between items-center">
                             <span class="text-gray-400">Item:</span>
-                            <span x-text="selectedDenom?.name"></span>
+                            <span class="font-medium text-white" x-text="selectedDenom?.name || '-'"></span>
                         </div>
-                        <div class="flex justify-between">
+                        <div class="flex justify-between items-center">
                             <span class="text-gray-400">Harga:</span>
-                            <span x-text="formatCurrency(selectedDenom?.price)"></span>
+                            <span class="font-medium text-white" x-text="selectedDenom?.price ? formatCurrency(selectedDenom.price) : '-'"></span>
                         </div>
-                        <div class="flex justify-between" x-show="discount > 0">
+                        <div class="flex justify-between items-center" x-show="discount > 0">
                             <span class="text-gray-400">Diskon:</span>
-                            <span class="text-green-400" x-text="'-' + formatCurrency(discount)"></span>
+                            <span class="text-green-400 font-medium" x-text="formatCurrency(discount)"></span>
                         </div>
-                        <div class="flex justify-between">
+                        <div class="flex justify-between items-center">
                             <span class="text-gray-400">Biaya Admin:</span>
-                            <span x-text="formatCurrency(getFee())"></span>
+                            <span class="font-medium text-white" x-text="formatCurrency(getFee())"></span>
                         </div>
-                        <div class="border-t border-gray-700 pt-2 mt-2">
-                            <div class="flex justify-between font-semibold text-lg">
-                                <span>Total:</span>
-                                <span class="text-yellow-400" x-text="formatCurrency(getTotal())"></span>
+                        <div class="border-t border-gray-600 pt-3 mt-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-white">Total:</span>
+                                <span class="text-yellow-400 font-bold text-xl" x-text="formatCurrency(getTotal())"></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Help Section -->
+                <div class="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <i data-lucide="headphones" class="w-5 h-5 text-blue-400"></i>
+                        <h4 class="font-semibold text-blue-400">Butuh Bantuan?</h4>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-3 leading-relaxed">Tim customer service kami siap membantu kamu 24/7</p>
+                    <button class="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition font-medium text-sm">
+                        <i data-lucide="message-circle" class="inline w-4 h-4 mr-1"></i>
+                        Hubungi Admin
+                    </button>
+                </div>
+                
                 <!-- Order Button -->
                 <button type="button" 
                         @click="showConfirmModal()"
-                         class="w-full mt-6 py-3 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition neon-glow">
+                         class="w-full py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-xl font-bold text-lg hover:from-yellow-500 hover:to-orange-600 transition duration-300 transform hover:scale-105 shadow-lg">
                     <i data-lucide="shopping-cart" class="inline w-5 h-5 mr-2"></i>
                     Pesan Sekarang!
                 </button>
+                
+                <!-- Security Info -->
+                <div class="mt-4 text-center">
+                    <div class="flex items-center justify-center space-x-4 text-xs text-gray-400">
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="shield" class="w-4 h-4"></i>
+                            <span>SSL Secured</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                            <span>Data Protected</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            <span>Trusted</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -390,30 +405,35 @@
     <!-- Reviews Section -->
     @if($reviews->count() > 0)
     <div class="mt-12">
-        <h3 class="text-xl font-semibold mb-6">Ulasan Terbaru</h3>
-        <div class="space-y-4">
-            @foreach($reviews as $review)
-            <div class="glass rounded-lg p-4">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <div class="flex items-center space-x-2 mb-2">
-                            <span class="font-semibold">{{ $review->user ? $review->user->name : 'Anonymous' }}</span>
-                            <div class="flex text-yellow-400">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= $review->rating)
-                                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    @else
-                                        <i data-lucide="star" class="w-4 h-4"></i>
-                                    @endif
-                                @endfor
+        <div class="glass rounded-xl p-6 border border-gray-700/50">
+            <h3 class="text-2xl font-bold mb-6 text-white">Ulasan Terbaru</h3>
+            <div class="space-y-6">
+                @foreach($reviews as $review)
+                <div class="bg-gray-800/50 rounded-lg p-5 border border-gray-700/30">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center font-bold text-gray-900">
+                                {{ strtoupper(substr($review->user ? $review->user->name : 'A', 0, 1)) }}
+                            </div>
+                            <div>
+                                <span class="font-semibold text-white">{{ $review->user ? $review->user->name : 'Anonymous' }}</span>
+                                <div class="flex text-yellow-400 mt-1">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= $review->rating)
+                                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                        @else
+                                            <i data-lucide="star" class="w-4 h-4"></i>
+                                        @endif
+                                    @endfor
+                                </div>
                             </div>
                         </div>
-                        <p class="text-gray-400">{{ $review->comment }}</p>
+                        <span class="text-xs text-gray-500 bg-gray-700/50 px-2 py-1 rounded">{{ $review->created_at->diffForHumans() }}</span>
                     </div>
-                    <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                    <p class="text-gray-300 leading-relaxed">{{ $review->comment }}</p>
                 </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
     </div>
     @endif
@@ -519,7 +539,9 @@ function checkoutForm() {
             const fees = {
                 'QRIS': 1000,
                 'VA': 2500,
-                'EWALLET': 1500
+                'EWALLET': 1500,
+                'CREDIT_CARD': 5000,
+                'CSTORE': 2500
             };
             return fees[this.formData.payment_method] || 0;
         },
@@ -667,9 +689,26 @@ function checkoutForm() {
 
 @push('scripts')
 <script>
-    // Pastikan Lucide icons ter-render
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
+    
+    // Simple animation for step cards
+    const cards = document.querySelectorAll('.fade-in-up');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+    
+    console.log('Game detail page loaded');
+});
 </script>
 @endpush

@@ -75,9 +75,10 @@ class AdminPanelProvider extends PanelProvider
                 'logout' => MenuItem::make()->label('Log Out'),
             ])
             ->navigationGroups([
-                'Shop Management',
-                'User Management', 
-                'Payment & Orders',
+                'Master Data',
+                'Transactions', 
+                'Users',
+                'Marketing',
                 'Content',
                 'Reports & Analytics',
                 'System',

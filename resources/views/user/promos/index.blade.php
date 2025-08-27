@@ -18,38 +18,46 @@
     </div>
 
     <!-- Promo Grid -->
+    @if($promos && $promos->count() > 0)
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @php
-            // Sample promo data - replace with actual data from controller
-            $promos = [
-                ['code' => 'NEWUSER10', 'value' => '10%', 'min' => 50000, 'expires' => '2024-12-31'],
-                ['code' => 'WEEKEND15', 'value' => '15%', 'min' => 100000, 'expires' => '2024-12-15'],
-                ['code' => 'CASHBACK5K', 'value' => 'Rp 5.000', 'min' => 75000, 'expires' => '2024-12-20'],
-            ];
-        @endphp
-
         @foreach($promos as $promo)
         <div class="glass rounded-xl overflow-hidden hover:transform hover:scale-105 transition">
             <div class="bg-gradient-to-r from-yellow-400 to-orange-400 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-900 font-bold text-2xl">{{ $promo['value'] }} OFF</p>
-                        <p class="text-gray-800 text-sm">Min. Rp {{ number_format($promo['min'], 0, ',', '.') }}</p>
+                        <p class="text-gray-900 font-bold text-2xl">
+                            @if($promo->type == 'percent')
+                                {{ $promo->value }}% OFF
+                            @else
+                                Rp {{ number_format($promo->value, 0, ',', '.') }} OFF
+                            @endif
+                        </p>
+                        <p class="text-gray-800 text-sm">Min. Rp {{ number_format($promo->min_total ?? 0, 0, ',', '.') }}</p>
                     </div>
                     <span class="bg-white/20 px-2 py-1 rounded text-xs text-gray-900">
-                        Exp: {{ $promo['expires'] }}
+                        @if($promo->ends_at)
+                            Exp: {{ $promo->ends_at->format('d M Y') }}
+                        @else
+                            No Expiry
+                        @endif
                     </span>
                 </div>
             </div>
             <div class="p-4">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="font-mono text-lg font-bold">{{ $promo['code'] }}</span>
-                    <button onclick="copyPromo('{{ $promo['code'] }}')" 
+                    <span class="font-mono text-lg font-bold">{{ $promo->code }}</span>
+                    <button onclick="copyPromo('{{ $promo->code }}')" 
                             class="text-yellow-400 hover:text-yellow-300">
                         <i data-lucide="copy" class="w-5 h-5"></i>
                     </button>
                 </div>
-                <p class="text-sm text-gray-400 mb-3">Valid for all games</p>
+                <p class="text-sm text-gray-400 mb-3">
+                    @if($promo->game_ids)
+                        Selected games only
+                    @else
+                        Valid for all games
+                    @endif
+                </p>
                 <button class="w-full py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition">
                     Use Now
                 </button>
@@ -57,6 +65,18 @@
         </div>
         @endforeach
     </div>
+
+    <!-- Pagination -->
+    <div class="mt-8">
+        {{ $promos->links() }}
+    </div>
+    @else
+    <div class="glass rounded-xl p-12 text-center">
+        <i data-lucide="tag" class="w-16 h-16 mx-auto mb-4 text-gray-500"></i>
+        <h3 class="text-xl font-semibold text-gray-200 mb-2">No Active Promos</h3>
+        <p class="text-gray-400 mb-6">Check back later for exciting deals and discounts!</p>
+    </div>
+    @endif
 
     <!-- Usage History -->
     <div class="mt-12 glass rounded-xl p-6">

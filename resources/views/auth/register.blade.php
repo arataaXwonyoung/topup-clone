@@ -26,6 +26,7 @@
                                value="{{ old('name') }}"
                                placeholder="John Doe"
                                class="w-full px-4 py-3 pl-10 bg-gray-800 rounded-lg border border-gray-700 focus:border-yellow-400 focus:outline-none transition"
+                               style="pointer-events: auto !important; z-index: 20 !important; position: relative !important;"
                                required 
                                autofocus>
                         <i data-lucide="user" class="absolute left-3 top-3.5 w-5 h-5 text-gray-400"></i>

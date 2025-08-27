@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-md mx-auto">
 
 
         {{-- Jika masih login, beri opsi logout --}}
@@ -26,9 +26,14 @@
         @endauth
 
         <!-- Login Form -->
-        <div class="glass rounded-xl p-8">
+        <div class="glass rounded-xl p-4 sm:p-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Masuk ke Akun</h2>
+                <p class="text-gray-400 text-sm mt-2">Masuk untuk melanjutkan top up</p>
+            </div>
             <form method="POST" action="{{ route('login') }}" x-data="{ showPassword: false }"
-                  x-effect="window.lucide && window.lucide.createIcons()">
+                  x-effect="setTimeout(() => window.lucide && window.lucide.createIcons(), 100)"
+                  style="position: relative; z-index: 10;">
                 @csrf
 
                 <!-- Email -->
@@ -38,6 +43,7 @@
                         <input type="email" id="email" name="email" value="{{ old('email') }}"
                                placeholder="example@gmail.com"
                                class="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 pl-10 transition focus:border-yellow-400 focus:outline-none"
+                               style="pointer-events: auto !important; z-index: 20 !important; position: relative !important;"
                                required autofocus>
                         <i data-lucide="mail" class="absolute left-3 top-3.5 h-5 w-5 text-gray-400"></i>
                     </div>
@@ -53,11 +59,13 @@
                         <input :type="showPassword ? 'text' : 'password'" id="password" name="password"
                                placeholder="Masukkan password"
                                class="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 pl-10 pr-10 transition focus:border-yellow-400 focus:outline-none"
+                               style="pointer-events: auto !important; z-index: 20 !important; position: relative !important;"
                                required>
                         <i data-lucide="lock" class="absolute left-3 top-3.5 h-5 w-5 text-gray-400"></i>
 
                         <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3 top-3.5 text-gray-400 hover:text-gray-300"
+                                style="pointer-events: auto !important; z-index: 25 !important; cursor: pointer !important;"
                                 :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'">
                             <i :data-lucide="showPassword ? 'eye-off' : 'eye'" class="h-5 w-5"></i>
                         </button>
@@ -85,7 +93,8 @@
 
                 <!-- Submit Button -->
                 <button type="submit"
-                        class="neon-glow w-full rounded-lg bg-yellow-400 py-3 font-semibold text-gray-900 transition hover:bg-yellow-500">
+                        class="w-full rounded-lg bg-yellow-400 py-3 font-semibold text-gray-900 transition hover:bg-yellow-500"
+                        style="pointer-events: auto !important; z-index: 30 !important; position: relative !important; cursor: pointer !important;">
                     <i data-lucide="log-in" class="mr-2 inline h-5 w-5"></i>
                     Masuk
                 </button>
