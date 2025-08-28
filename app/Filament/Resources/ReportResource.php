@@ -115,7 +115,24 @@ class ReportResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\DateRangeFilter::make('created_at')
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('From Date'),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Until Date'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
                     ->label('Order Date Range'),
                 
                 Tables\Filters\SelectFilter::make('status')
