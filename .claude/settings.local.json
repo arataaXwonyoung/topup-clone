@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(php artisan serve:*)",
+      "Bash(php artisan tinker:*)",
+      "Bash(php artisan migrate:*)",
+      "Bash(php artisan:*)",
+      "Bash(curl:*)",
+      "Bash(php -l:*)",
+      "Bash(/dev/null)",
+      "Bash(sed:*)",
+      "Bash(php:*)",
+      "Bash(grep:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\c\\laragon\\www"
+    ]
+  }
+}
