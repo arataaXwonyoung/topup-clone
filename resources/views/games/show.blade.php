@@ -54,7 +54,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
         <!-- Left Column - Stepper Form -->
         <div class="lg:col-span-3 space-y-6">
-            <form id="checkoutForm" x-data="checkoutForm()" @submit.prevent="submitOrder">
+            <form id="checkoutForm" x-data="checkoutForm()" x-ref="checkoutForm" @submit.prevent="submitOrder" @submit-order.window="submitOrder()">
                 <!-- Step 1: Account Info -->
                 <div class="glass rounded-xl p-6 mb-6 fade-in-up step-card border border-gray-700/50" style="animation-delay: 0.1s;">
                     <div class="flex items-center mb-6">
@@ -106,18 +106,18 @@
                     @endphp
                     
                     @if($denominations && $denominations->count() > 0)
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" style="display: grid !important; opacity: 1 !important; visibility: visible !important;">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 denomination-grid">
                             @foreach($denominations as $denom)
-                            <div style="display: block !important; opacity: 1 !important; visibility: visible !important;">
-                                <input type="radio" 
-                                       name="denomination_id" 
+                            <div>
+                                <input type="radio"
+                                       name="denomination_id"
                                        value="{{ $denom->id }}"
                                        id="denom_{{ $denom->id }}"
                                        x-model="formData.denomination_id"
                                        @change="updateSummary({{ $denom->toJson() }})"
                                        class="hidden peer">
-                                <label for="denom_{{ $denom->id }}" class="block cursor-pointer" style="display: block !important; opacity: 1 !important; visibility: visible !important;">
-                                    <div class="bg-gray-800 border-2 border-gray-700 rounded-lg p-4 hover:border-yellow-400 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 transition-all duration-200 relative min-h-[110px] flex flex-col justify-between" style="display: flex !important; opacity: 1 !important; visibility: visible !important;">
+                                <label for="denom_{{ $denom->id }}" class="block cursor-pointer">
+                                    <div class="bg-gray-800 border-2 border-gray-700 rounded-lg p-4 hover:border-yellow-400 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 transition-all duration-200 relative min-h-[110px] flex flex-col justify-between">
                                         @if($denom->is_hot ?? false)
                                         <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">HOT</span>
                                         @endif
@@ -153,7 +153,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="text-center py-12" style="display: block !important; opacity: 1 !important; visibility: visible !important;">
+                        <div class="text-center py-12">
                             <div class="text-gray-400">
                                 <i data-lucide="package-x" class="w-16 h-16 mx-auto mb-4 opacity-50"></i>
                                 <p class="text-lg mb-2">Belum ada nominal tersedia</p>
@@ -440,13 +440,13 @@
 </div>
 
 <!-- Confirmation Modal -->
-<div id="confirmModal" 
-     x-data="{ open: false }" 
-     x-show="open" 
+<div id="confirmModal"
+     x-data="{ open: false }"
+     x-show="open"
      @open-confirm.window="open = true"
      class="fixed inset-0 z-50 flex items-center justify-center p-4"
-     style="display: none;">
-    <div class="fixed inset-0 bg-black opacity-50" @click="open = false"></div>
+     x-cloak>
+    <div class="fixed inset-0 bg-black opacity-50 modal-backdrop" @click="open = false"></div>
     
     <div class="relative glass rounded-xl p-6 max-w-md w-full" 
          @click.stop
@@ -497,7 +497,7 @@
         </div>
         
         <div class="flex space-x-3">
-            <button @click="$refs.checkoutForm.submit()" 
+            <button @click="$dispatch('submit-order')"
                     class="flex-1 py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition">
                 Pesan Sekarang!
             </button>
@@ -685,30 +685,52 @@ function checkoutForm() {
         }
     }
 }
-</script>
 
-@push('scripts')
-<script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
-    
+
     // Simple animation for step cards
     const cards = document.querySelectorAll('.fade-in-up');
     cards.forEach((card, index) => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
         card.style.transition = 'all 0.6s ease';
-        
+
         setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
         }, index * 200);
     });
-    
+
     console.log('Game detail page loaded');
 });
 </script>
-@endpush
+
+<style>
+[x-cloak] {
+    display: none !important;
+}
+
+/* Ensure denomination cards display properly */
+.denomination-grid {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Fix payment method visibility */
+.payment-method-option {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Ensure modal backdrop works correctly */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+</style>
+

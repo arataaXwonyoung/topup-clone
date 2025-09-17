@@ -372,6 +372,17 @@
             --z-popover: 9500;
             --z-form-elements: 9999;
             --z-critical: 10000;
+            
+            /* Design System Colors - Consistent */
+            --color-base: #0B0B0F;
+            --color-surface: #14141A;
+            --color-stroke: #2A2A32;
+            --color-accent: #FFD54A;
+            --color-accent-hover: #FFC107;
+            --color-info: #9ED8FF;
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: #C8C8D0;
+            --border-radius: 16px;
         }
         
         /* Background Elements */
@@ -403,6 +414,60 @@
         /* Critical Interactive Elements */
         .mobile-menu button, .scroll-to-top, .customer-service {
             z-index: var(--z-critical) !important;
+        }
+        
+        /* Layout Fixes */
+        body {
+            background: var(--color-base);
+            color: var(--color-text-secondary);
+        }
+        
+        main#main-content {
+            padding-top: 0;
+        }
+        
+        /* Mobile Menu Styles */
+        #mobile-menu {
+            z-index: calc(var(--z-modal) - 1);
+        }
+        
+        /* Responsive Navigation Fixes */
+        @media (max-width: 1279px) {
+            .nav-link span {
+                font-size: 0.875rem;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            #main-navbar {
+                height: auto;
+                min-height: 64px;
+            }
+            
+            #nav-content {
+                height: 64px;
+            }
+            
+            .logo {
+                font-size: 1.5rem !important;
+            }
+            
+            /* Fix search bar on mobile */
+            #main-navbar .hidden.md\\:flex {
+                display: none !important;
+            }
+        }
+        
+        /* Category Nav Fixes */
+        .category-nav {
+            top: 80px;
+            z-index: var(--z-elevated);
+        }
+        
+        @media (max-width: 767px) {
+            .category-nav {
+                top: 64px;
+            }
         }
         
         /* Prevent FOUC for Alpine */
@@ -1365,64 +1430,97 @@
     <a href="#main-content" class="skip-link">Skip to main content</a>
 <div class="min-h-screen">
     <!-- Navigation -->
-    <nav id="main-navbar" class="sticky top-0 border-b transition-all duration-300" style="background: #0E0E0F; border-color: rgba(255, 255, 255, 0.08); z-index: var(--z-elevated);">
+    <nav id="main-navbar" class="sticky top-0 border-b transition-all duration-300 backdrop-blur-md" style="background: rgba(11, 11, 15, 0.95); border-color: var(--color-stroke); z-index: var(--z-modal);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 transition-all duration-300" id="nav-content">
-                <div class="flex items-center flex-1">
-                    <!-- Logo -->
-                    <a href="{{ route('home') }}" class="flex items-center mr-8">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
-                                <i data-lucide="zap" class="w-5 h-5 text-gray-900"></i>
-                            </div>
-                            <span class="logo text-2xl font-bold transition-all duration-300" style="color: #FFEA00;">Aratopup</span>
+            <div class="flex items-center justify-between h-20 transition-all duration-300" id="nav-content">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                            <i data-lucide="zap" class="w-6 h-6 text-gray-900"></i>
                         </div>
+                        <span class="logo text-2xl font-bold transition-all duration-300" style="color: #FFD54A;">Takapedia</span>
                     </a>
+                </div>
 
-                    <!-- Search Bar (Centered) -->
-                    <div class="hidden sm:block flex-1 max-w-md mx-auto">
-                        <form action="{{ route('home') }}" method="GET">
-                            <div class="relative">
+                <!-- Search Bar (Centered, Large) -->
+                <div class="hidden md:flex flex-1 justify-center px-8 max-w-4xl">
+                    <div class="w-full max-w-2xl">
+                        <form action="{{ route('home') }}" method="GET" class="relative">
+                            <div class="relative group">
                                 <input
                                     type="text"
                                     name="search"
-                                    placeholder="Cari Game atau Voucher"
+                                    placeholder="🎮 Cari game favorit kamu..."
                                     value="{{ request('search') }}"
-                                    class="w-full px-4 py-2.5 pl-10 pr-4 rounded-xl border focus:outline-none transition-all duration-300"
-                                    style="background: #1F1F2A; border-color: rgba(255, 255, 255, 0.08); color: #E6E6E6; pointer-events: auto !important; z-index: 500 !important; position: relative !important;"
-                                    onfocus="this.style.borderColor='#FFEA00'"
+                                    class="w-full px-6 py-3 pl-12 pr-16 rounded-2xl border-2 focus:outline-none transition-all duration-300 text-base font-medium"
+                                    style="background: #14141A; border-color: #2A2A32; color: #FFFFFF;"
+                                    onfocus="this.style.borderColor='#FFD54A'; this.style.boxShadow='0 0 0 3px rgba(255, 213, 74, 0.1)'"
+                                    onblur="this.style.borderColor='#2A2A32'; this.style.boxShadow='none'"
                                 >
-                                <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
+                                <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+                                <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-7 h-7 rounded-full bg-yellow-400/10 flex items-center justify-center hover:bg-yellow-400/20 transition-colors" onclick="this.parentElement.querySelector('input').value = ''; this.parentElement.querySelector('input').focus();">
+                                    <i data-lucide="x" class="w-4 h-4 text-gray-400"></i>
+                                </button>
+                            </div>
+                            <!-- Auto-suggest dropdown -->
+                            <div id="search-suggestions" class="absolute top-full left-0 right-0 bg-gray-800 border border-gray-600 rounded-xl mt-2 shadow-2xl hidden z-50">
+                                <!-- Suggestions will be populated by JavaScript -->
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Navigation Items -->
-                <div class="hidden md:flex items-center space-x-3 xl:space-x-6 mr-6">
-                    <a href="{{ route('home') }}" class="nav-link flex items-center space-x-1 hover:text-yellow-400 transition-colors px-2 xl:px-3 py-2 rounded-lg hover:bg-yellow-400/10">
-                        <span class="font-medium text-sm xl:text-base">Topup</span>
-                    </a>
+                <!-- Right Side Items -->
+                <div class="flex items-center space-x-4">
+                    <!-- Language/Region -->
+                    <div class="hidden lg:flex items-center">
+                        <div class="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-600 bg-gray-800/50 hover:bg-gray-700/50 transition-colors cursor-pointer">
+                            <span class="text-sm font-medium text-gray-300">🇮🇩</span>
+                            <span class="text-sm font-medium text-gray-300">ID</span>
+                            <span class="text-xs text-gray-500">|</span>
+                            <span class="text-sm font-medium text-yellow-400">IDR</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
 
-                    <a href="{{ route('transactions.check') }}" class="nav-link flex items-center space-x-1 hover:text-yellow-400 transition-colors px-2 xl:px-3 py-2 rounded-lg hover:bg-yellow-400/10">
-                        <span class="font-medium text-sm xl:text-base">Cek</span>
-                    </a>
+                    <!-- Navigation Items -->
+                    <div class="hidden xl:flex items-center space-x-1">
+                        <a href="{{ route('home') }}" class="nav-link flex items-center space-x-2 hover:text-yellow-400 transition-colors px-3 py-2 rounded-lg hover:bg-yellow-400/5 group">
+                            <i data-lucide="gamepad-2" class="w-4 h-4 group-hover:text-yellow-400"></i>
+                            <span class="font-medium text-sm">Topup</span>
+                        </a>
 
-                    <a href="{{ route('leaderboard') }}" class="nav-link flex items-center space-x-1 hover:text-yellow-400 transition-colors px-2 xl:px-3 py-2 rounded-lg hover:bg-yellow-400/10">
-                        <span class="font-medium text-sm xl:text-base">Board</span>
-                    </a>
+                        <a href="{{ route('transactions.check') }}" class="nav-link flex items-center space-x-2 hover:text-yellow-400 transition-colors px-3 py-2 rounded-lg hover:bg-yellow-400/5 group">
+                            <i data-lucide="search-check" class="w-4 h-4 group-hover:text-yellow-400"></i>
+                            <span class="font-medium text-sm">Cek</span>
+                        </a>
 
-                    <a href="{{ route('articles.index') }}" class="nav-link flex items-center space-x-1 hover:text-yellow-400 transition-colors px-2 xl:px-3 py-2 rounded-lg hover:bg-yellow-400/10">
-                        <span class="font-medium text-sm xl:text-base">Artikel</span>
-                    </a>
+                        <a href="{{ route('leaderboard') }}" class="nav-link flex items-center space-x-2 hover:text-yellow-400 transition-colors px-3 py-2 rounded-lg hover:bg-yellow-400/5 group">
+                            <i data-lucide="trophy" class="w-4 h-4 group-hover:text-yellow-400"></i>
+                            <span class="font-medium text-sm">Board</span>
+                        </a>
 
-                    <a href="{{ route('calculator') }}" class="nav-link flex items-center space-x-1 hover:text-yellow-400 transition-colors px-2 xl:px-3 py-2 rounded-lg hover:bg-yellow-400/10">
-                        <span class="font-medium text-sm xl:text-base">Calc</span>
-                    </a>
-                </div>
+                        <a href="{{ route('articles.index') }}" class="nav-link flex items-center space-x-2 hover:text-yellow-400 transition-colors px-3 py-2 rounded-lg hover:bg-yellow-400/5 group">
+                            <i data-lucide="newspaper" class="w-4 h-4 group-hover:text-yellow-400"></i>
+                            <span class="font-medium text-sm">Artikel</span>
+                        </a>
 
-                <!-- Auth Buttons -->
-                <div class="flex items-center space-x-3">
+                        <a href="{{ route('calculator') }}" class="nav-link flex items-center space-x-2 hover:text-yellow-400 transition-colors px-3 py-2 rounded-lg hover:bg-yellow-400/5 group">
+                            <i data-lucide="calculator" class="w-4 h-4 group-hover:text-yellow-400"></i>
+                            <span class="font-medium text-sm">Calc</span>
+                        </a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="xl:hidden">
+                        <button class="text-gray-400 hover:text-yellow-400 transition-colors p-2" onclick="toggleMobileMenu()">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+
+                    <!-- Auth Buttons -->
+                    <div class="flex items-center space-x-3">
 
                     @auth
                         <div class="relative" x-data="{ open: false }" @keydown.escape.window="open = false">
@@ -1524,7 +1622,59 @@
                     
                 </div>
             </div>
-            
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden xl:hidden bg-gray-900/95 backdrop-blur-md border-t border-gray-700">
+            <div class="px-4 py-4 space-y-2">
+                <!-- Mobile Search -->
+                <div class="mb-4">
+                    <form action="{{ route('home') }}" method="GET" class="relative">
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="🎮 Cari game..."
+                            value="{{ request('search') }}"
+                            class="w-full px-4 py-3 pl-10 pr-4 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                            style="background: #14141A; border-color: #2A2A32; color: #FFFFFF;"
+                            onfocus="this.style.borderColor='#FFD54A'"
+                            onblur="this.style.borderColor='#2A2A32'"
+                        >
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    </form>
+                </div>
+                
+                <!-- Mobile Navigation Items -->
+                <a href="{{ route('home') }}" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-yellow-400 hover:bg-gray-800 transition-colors">
+                    <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+                    <span>Topup</span>
+                </a>
+                <a href="{{ route('transactions.check') }}" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-yellow-400 hover:bg-gray-800 transition-colors">
+                    <i data-lucide="search-check" class="w-5 h-5"></i>
+                    <span>Cek Transaksi</span>
+                </a>
+                <a href="{{ route('leaderboard') }}" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-yellow-400 hover:bg-gray-800 transition-colors">
+                    <i data-lucide="trophy" class="w-5 h-5"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <a href="{{ route('articles.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-yellow-400 hover:bg-gray-800 transition-colors">
+                    <i data-lucide="newspaper" class="w-5 h-5"></i>
+                    <span>Artikel</span>
+                </a>
+                <a href="{{ route('calculator') }}" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-yellow-400 hover:bg-gray-800 transition-colors">
+                    <i data-lucide="calculator" class="w-5 h-5"></i>
+                    <span>Kalkulator</span>
+                </a>
+                
+                <!-- Language Selector -->
+                <div class="flex items-center justify-center pt-4">
+                    <div class="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-600 bg-gray-800/50">
+                        <span class="text-sm font-medium text-gray-300">🇮🇩 ID</span>
+                        <span class="text-xs text-gray-500">|</span>
+                        <span class="text-sm font-medium text-yellow-400">IDR</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -1533,97 +1683,143 @@
         @yield('content')
     </main>
 
-    <!-- Footer Takapedia Style -->
+    <!-- Footer -->
     <footer class="relative mt-20" style="background: #000000;">
-        <!-- Yellow Lightning Wave Hero Element -->
         <div class="relative overflow-hidden">
+            <!-- Wave Separator -->
             <svg class="absolute inset-x-0 top-0" viewBox="0 0 1200 120" style="height: 60px;">
-                <path d="M0,60 Q300,10 600,60 T1200,60 L1200,120 L0,120 Z" fill="#FFEA00" opacity="0.8"/>
-                <path d="M0,70 Q300,20 600,70 T1200,70 L1200,120 L0,120 Z" fill="#FFC700" opacity="0.6"/>
+                <path d="M0,60 Q300,10 600,60 T1200,60 L1200,120 L0,120 Z" fill="#FFD54A" opacity="0.8"/>
+                <path d="M0,70 Q300,20 600,70 T1200,70 L1200,120 L0,120 Z" fill="#FFC107" opacity="0.6"/>
             </svg>
+            
             <div class="relative pt-20 pb-16">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <!-- Brand Description -->
                     <div class="text-center mb-12">
                         <div class="flex items-center justify-center space-x-3 mb-4">
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #FFEA00;">
-                                <i data-lucide="zap" class="w-6 h-6" style="color: #000000;"></i>
+                            <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                                <i data-lucide="zap" class="w-7 h-7 text-gray-900"></i>
                             </div>
-                            <span class="text-3xl font-bold" style="color: #FFEA00;">Aratopup</span>
+                            <span class="text-4xl font-bold" style="color: #FFD54A;">Takapedia</span>
                         </div>
-                        <p class="max-w-2xl mx-auto text-sm leading-relaxed" style="color: #A8A8A8;">
+                        <p class="max-w-3xl mx-auto text-base leading-relaxed" style="color: #A8A8A8;">
                             Platform top up game terpercaya #1 di Indonesia. Dapatkan diamond, UC, dan item game favorit 
                             dengan harga terbaik, proses instant, dan keamanan terjamin. Melayani jutaan gamer sejak 2020.
                         </p>
                     </div>
 
-                    <!-- Yellow Separator Line -->
-                    <div class="w-full h-px mb-12" style="background: #FFEA00;"></div>
+                    <!-- Separator Line -->
+                    <div class="w-full h-px mb-12" style="background: linear-gradient(90deg, transparent, #FFD54A, transparent);"></div>
 
-                    <!-- 4 Column Links -->
+                    <!-- Multi-column Links -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                         <!-- Peta Situs -->
                         <div>
-                            <h3 class="font-semibold mb-4" style="color: #FFFFFF;">Peta Situs</h3>
+                            <h3 class="font-semibold text-lg mb-6 flex items-center gap-2" style="color: #FFFFFF;">
+                                <i data-lucide="map" class="w-5 h-5 text-yellow-400"></i>
+                                Peta Situs
+                            </h3>
                             <ul class="space-y-3">
-                                <li><a href="{{ route('home') }}" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Beranda</a></li>
-                                <li><a href="#popular" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Game Populer</a></li>
-                                <li><a href="{{ route('calculator') }}" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Kalkulator</a></li>
-                                <li><a href="{{ route('leaderboard') }}" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Leaderboard</a></li>
-                                <li><a href="{{ route('articles.index') }}" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Artikel & News</a></li>
+                                <li><a href="{{ route('home') }}" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="home" class="w-4 h-4 group-hover:text-yellow-400"></i>Beranda
+                                </a></li>
+                                <li><a href="#popular" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="gamepad-2" class="w-4 h-4 group-hover:text-yellow-400"></i>Game Populer
+                                </a></li>
+                                <li><a href="{{ route('calculator') }}" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="calculator" class="w-4 h-4 group-hover:text-yellow-400"></i>Kalkulator
+                                </a></li>
+                                <li><a href="{{ route('leaderboard') }}" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="trophy" class="w-4 h-4 group-hover:text-yellow-400"></i>Leaderboard
+                                </a></li>
+                                <li><a href="{{ route('articles.index') }}" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="newspaper" class="w-4 h-4 group-hover:text-yellow-400"></i>Artikel & News
+                                </a></li>
                             </ul>
                         </div>
 
                         <!-- Dukungan -->
                         <div>
-                            <h3 class="font-semibold mb-4" style="color: #FFFFFF;">Dukungan</h3>
+                            <h3 class="font-semibold text-lg mb-6 flex items-center gap-2" style="color: #FFFFFF;">
+                                <i data-lucide="headphones" class="w-5 h-5 text-yellow-400"></i>
+                                Dukungan
+                            </h3>
                             <ul class="space-y-3">
-                                <li><a href="{{ route('transactions.check') }}" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Cek Transaksi</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">FAQ</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Live Chat</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">WhatsApp</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Tutorial</a></li>
+                                <li><a href="{{ route('transactions.check') }}" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="search-check" class="w-4 h-4 group-hover:text-yellow-400"></i>Cek Transaksi
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="help-circle" class="w-4 h-4 group-hover:text-yellow-400"></i>FAQ
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="message-circle" class="w-4 h-4 group-hover:text-yellow-400"></i>Live Chat
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="phone" class="w-4 h-4 group-hover:text-yellow-400"></i>WhatsApp
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="book-open" class="w-4 h-4 group-hover:text-yellow-400"></i>Tutorial
+                                </a></li>
                             </ul>
                         </div>
 
                         <!-- Legalitas -->
                         <div>
-                            <h3 class="font-semibold mb-4" style="color: #FFFFFF;">Legalitas</h3>
+                            <h3 class="font-semibold text-lg mb-6 flex items-center gap-2" style="color: #FFFFFF;">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-yellow-400"></i>
+                                Legalitas
+                            </h3>
                             <ul class="space-y-3">
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Syarat & Ketentuan</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Kebijakan Privasi</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Kebijakan Refund</a></li>
-                                <li><a href="#" class="text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">Panduan Keamanan</a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="file-text" class="w-4 h-4 group-hover:text-yellow-400"></i>Syarat & Ketentuan
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="lock" class="w-4 h-4 group-hover:text-yellow-400"></i>Kebijakan Privasi
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="rotate-ccw" class="w-4 h-4 group-hover:text-yellow-400"></i>Kebijakan Refund
+                                </a></li>
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="shield" class="w-4 h-4 group-hover:text-yellow-400"></i>Panduan Keamanan
+                                </a></li>
                             </ul>
                         </div>
 
                         <!-- Social Media -->
                         <div>
-                            <h3 class="font-semibold mb-4" style="color: #FFFFFF;">Social Media</h3>
+                            <h3 class="font-semibold text-lg mb-6 flex items-center gap-2" style="color: #FFFFFF;">
+                                <i data-lucide="share-2" class="w-5 h-5 text-yellow-400"></i>
+                                Social Media
+                            </h3>
                             <ul class="space-y-3">
-                                <li><a href="#" class="flex items-center text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">
-                                    <i data-lucide="facebook" class="w-4 h-4 mr-2"></i>Facebook
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="facebook" class="w-4 h-4 group-hover:text-yellow-400" aria-hidden="true"></i>
+                                    <span class="sr-only">Facebook</span>Facebook
                                 </a></li>
-                                <li><a href="#" class="flex items-center text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">
-                                    <i data-lucide="instagram" class="w-4 h-4 mr-2"></i>Instagram
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="instagram" class="w-4 h-4 group-hover:text-yellow-400" aria-hidden="true"></i>
+                                    <span class="sr-only">Instagram</span>Instagram
                                 </a></li>
-                                <li><a href="#" class="flex items-center text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">
-                                    <i data-lucide="twitter" class="w-4 h-4 mr-2"></i>Twitter
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="twitter" class="w-4 h-4 group-hover:text-yellow-400" aria-hidden="true"></i>
+                                    <span class="sr-only">Twitter</span>Twitter
                                 </a></li>
-                                <li><a href="#" class="flex items-center text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">
-                                    <i data-lucide="youtube" class="w-4 h-4 mr-2"></i>YouTube
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="youtube" class="w-4 h-4 group-hover:text-yellow-400" aria-hidden="true"></i>
+                                    <span class="sr-only">YouTube</span>YouTube
                                 </a></li>
-                                <li><a href="#" class="flex items-center text-sm transition-colors hover:underline" style="color: #A8A8A8;" onmouseover="this.style.color='#FFEA00'" onmouseout="this.style.color='#A8A8A8'">
-                                    <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>Discord
+                                <li><a href="#" class="text-sm transition-colors hover:underline flex items-center gap-2 group" style="color: #A8A8A8;" onmouseover="this.style.color='#FFD54A'" onmouseout="this.style.color='#A8A8A8'">
+                                    <i data-lucide="message-circle" class="w-4 h-4 group-hover:text-yellow-400" aria-hidden="true"></i>
+                                    <span class="sr-only">Discord</span>Discord
                                 </a></li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Bottom Copyright -->
+                    <!-- Copyright -->
                     <div class="text-center pt-8 border-t" style="border-color: rgba(255, 255, 255, 0.08);">
-                        <p class="text-xs" style="color: #666666;">
-                            © {{ date('Y') }} Aratopup. Hak cipta dilindungi undang-undang. Platform top up game terpercaya.
+                        <p class="text-sm" style="color: #666666;">
+                            © {{ date('Y') }} Takapedia. Hak cipta dilindungi undang-undang. Platform top up game terpercaya.
                         </p>
                     </div>
                 </div>
@@ -1632,11 +1828,10 @@
 
         <!-- Scroll to Top Button -->
         <button id="scrollToTop" 
-                class="fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-lg opacity-0 invisible transition-all duration-300"
-                style="background: #FFEA00; color: #000000; z-index: var(--z-elevated);"
+                class="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-2xl opacity-0 invisible transition-all duration-300 hover:scale-110"
+                style="background: linear-gradient(135deg, #FFD54A, #FFC107); color: #000000; z-index: var(--z-elevated);"
                 onclick="scrollToTop()"
-                onmouseover="this.style.background='#FFC700'"
-                onmouseout="this.style.background='#FFEA00'">
+                aria-label="Scroll to top">
             <i data-lucide="chevron-up" class="w-6 h-6 mx-auto"></i>
         </button>
     </footer>
@@ -1651,6 +1846,38 @@
 </div>
 
 <script>
+    // Mobile menu toggle functionality
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuButton = document.querySelector('[onclick="toggleMobileMenu()"] i');
+        
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.remove('hidden');
+            menuButton.setAttribute('data-lucide', 'x');
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        } else {
+            mobileMenu.classList.add('hidden');
+            menuButton.setAttribute('data-lucide', 'menu');
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+    }
+
+    // Close mobile menu when clicking on nav links
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileNavLinks = document.querySelectorAll('#mobile-menu a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+    });
 
     // Scroll to top functionality
     function scrollToTop() {
